@@ -3,7 +3,7 @@ import { View } from '@tarojs/components'
 
 import './index.scss'
 
-const Index = (props) => {
+const Center = (props) => {
   return (
     <View className='index'>
       personal center
@@ -12,5 +12,5 @@ const Index = (props) => {
 }
 
 
-export default React.memo(Index);
+export default React.memo(Center);
 

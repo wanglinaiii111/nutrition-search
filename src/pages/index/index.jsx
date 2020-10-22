@@ -18,7 +18,7 @@ const Index = (props) => {
   return (
     <View className='index'>
       {
-        _.find([page === 'recommend' && <Recommend></Recommend>, page === 'food' && <Food></Food>, page === 'presonal-center' && <PresonalCenter></PresonalCenter>], Boolean)
+        _.find([page === 'recommend' && <Recommend></Recommend>, page === 'food' && <Food></Food>, page === 'personal-center' && <PresonalCenter></PresonalCenter>], Boolean)
       }
       <Tab></Tab>
     </View>

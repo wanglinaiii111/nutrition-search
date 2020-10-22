@@ -31,7 +31,6 @@ const Tab = (props) => {
     <View class='container'>
       {
         pageArr.map((item) => {
-          // console.log(item)
         return <View class={page === item.status && 'tabItemActive'} onClick={handleClick(item.status)} key={item.status}>{item.name}</View>
         })
       }
