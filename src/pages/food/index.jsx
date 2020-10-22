@@ -7,7 +7,7 @@ const Index = (props) => {
 
   return (
     <View className='index'>
-      food
+      food 
     </View>
   )
 }
