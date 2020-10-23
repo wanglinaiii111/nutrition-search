@@ -4,17 +4,21 @@ import { View } from '@tarojs/components'
 
 import { setPage } from '../../actions/tab'
 
-import './tab.scss'
+import $icon from '../../iconfont/iconfont.scss'
+import styles from './tab.scss'
 
 const pageArr = [{
   name: '推荐',
-  status: 'recommend'
+  status: 'recommend',
+  iconName: 'iconrementuijian'
 }, {
   name: '食物分类',
-  status: 'food'
+  status: 'food',
+  iconName: 'iconshiwu-'
 }, {
   name: '个人中心',
-  status: 'personal-center'
+  status: 'personal-center',
+  iconName: 'icongerenzhongxin'
 }]
 
 const Tab = (props) => {
@@ -28,10 +32,13 @@ const Tab = (props) => {
   }
 
   return (
-    <View class='container'>
+    <View className={styles.container}>
       {
         pageArr.map((item) => {
-        return <View class={page === item.status && 'tabItemActive'} onClick={handleClick(item.status)} key={item.status}>{item.name}</View>
+          return <View className={page === item.status && `${styles.tabItemActive}`} onClick={handleClick(item.status)} key={item.status}>
+            <View className={`${styles.myIcon} ${$icon.iconfont} ${$icon[item.iconName]}`}></View>
+            {item.name}
+          </View>
         })
       }
     </View>

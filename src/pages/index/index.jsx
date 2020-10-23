@@ -7,7 +7,7 @@ import Recommend from '../recommend/index'
 import PresonalCenter from '../personal-center/index'
 import Food from '../food/index'
 
-import './index.scss'
+import styles from './index.scss'
 
 const _ = require("underscore");
 
@@ -16,7 +16,7 @@ const Index = (props) => {
   const page = useSelector((state) => state.tab.page);
 
   return (
-    <View className='index'>
+    <View className={styles.index}>
       {
         _.find([page === 'recommend' && <Recommend></Recommend>, page === 'food' && <Food></Food>, page === 'personal-center' && <PresonalCenter></PresonalCenter>], Boolean)
       }

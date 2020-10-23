@@ -3,7 +3,7 @@ import {
 } from '../constants'
 
 const INITIAL_STATE = {
-  page: 'recommend'
+  page: 'personal-center'
 }
 
 export default function counter(state = INITIAL_STATE, action) {
