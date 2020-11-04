@@ -1,0 +1,28 @@
+.container {
+  width: 353px;
+  height: 200px;
+  margin-bottom: 15px;
+  border: 1px solid rgb(0, 124, 128);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 6px solid rgb(255, 208, 0);
+  background-image: url('../../../image/food1.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-color: rgb(197, 197, 197);
+  margin: 10px 0 0 10px;
+}
+
+.name{
+  width: 240px;
+  height: 94px;
+  text-align: center;
+  line-height: 94px;
+}
