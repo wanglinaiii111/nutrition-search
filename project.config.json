@@ -38,5 +38,37 @@
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "libVersion": "2.13.1",
-  "condition": {}
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "plugin": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "gamePlugin": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": [
+        {
+          "id": -1,
+          "name": "pages/food/index",
+          "pathName": "pages/food/index",
+          "scene": null
+        }
+      ]
+    }
+  }
 }
