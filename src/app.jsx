@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 
 import configStore from './store'
+import './iconfont/iconfont.scss'
 import './app.scss'
 
 const store = configStore()

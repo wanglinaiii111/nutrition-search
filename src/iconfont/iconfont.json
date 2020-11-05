@@ -2,9 +2,93 @@
   "id": "2152578",
   "name": "nutrition-search",
   "font_family": "iconfont",
-  "css_prefix_text": "icon",
+  "css_prefix_text": "iconfont-",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "8157608",
+      "name": "谷物 麦",
+      "font_class": "caishichang-",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "8157611",
+      "name": "玉米",
+      "font_class": "caishichang-1",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "8157612",
+      "name": "胡萝卜",
+      "font_class": "caishichang-2",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "8157615",
+      "name": "茄子",
+      "font_class": "caishichang-3",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "8157617",
+      "name": "花菜",
+      "font_class": "caishichang-4",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "8157621",
+      "name": "西瓜",
+      "font_class": "caishichang-5",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "8157622",
+      "name": "牛奶",
+      "font_class": "caishichang-6",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "8157626",
+      "name": "梨子",
+      "font_class": "caishichang-7",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "8157628",
+      "name": "香蕉",
+      "font_class": "caishichang-8",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "8157629",
+      "name": "苹果",
+      "font_class": "caishichang-9",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "8157641",
+      "name": "葡萄",
+      "font_class": "caishichang-10",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "3826032",
+      "name": "食物",
+      "font_class": "shiwu",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
     {
       "icon_id": "1343817",
       "name": "个人中心",

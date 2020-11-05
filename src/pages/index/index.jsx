@@ -1,12 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { View, Image } from '@tarojs/components'
-import { Swiper, SwiperItem } from '@tarojs/components'
-
-
+import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import styles from './index.module.scss'
 
-const _ = require("underscore");
+// const _ = require("underscore");
 
 const Index = (props) => {
   const dispatch = useDispatch();
