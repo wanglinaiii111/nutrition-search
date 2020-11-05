@@ -4,7 +4,7 @@ import { View, Image } from '@tarojs/components'
 import { Swiper, SwiperItem } from '@tarojs/components'
 
 
-import styles from './index.scss'
+import styles from './index.module.scss'
 
 const _ = require("underscore");
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Image, Text } from '@tarojs/components'
 import { getUserInfo } from '../../utils/sdk'
 
-import styles from './index.scss'
+import styles from './index.module.scss'
 
 const Center = (props) => {
   const [userInfo, setUserInfo] = useState(null)

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import { getSystemInfo } from '../../utils/sdk'
 
 import { AtTabs, AtTabsPane } from 'taro-ui'
-import styles from './index.scss'
+import styles from './index.module.scss'
 import { ListItem } from './listItem/listItem'
 
 const tabList = [
@@ -25,10 +25,6 @@ const tabList = [
   { title: '粮油', list: [{ name: '小麦', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] }
 ]
 
-const scrollStyle = {
-  height: '150px'
-}
-
 const Food = (props) => {
   const [current, setCurrent] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
@@ -36,12 +32,9 @@ const Food = (props) => {
     setCurrent(current)
   }
 
-  useEffect(() => {
-    Taro.getSystemInfo({
-      success: res => {
-        setScrollHeight(res.windowHeight - 35)
-      }
-    })
+  useEffect(async () => {
+    const systemInfo = await getSystemInfo()
+    setScrollHeight(systemInfo.windowHeight - 35)
   }, [])
 
   return (
@@ -51,11 +44,11 @@ const Food = (props) => {
         scroll
         tabList={tabList}
         onClick={handleClick}>
-        
-          {
-            tabList.map((item, index) => {
-              return <AtTabsPane current={current} index={index}>
-                <ScrollView scroll-y style={{ height: `${scrollHeight}px` }}>
+
+        {
+          tabList.map((item, index) => {
+            return <AtTabsPane current={current} index={index}>
+              <ScrollView scroll-y style={{ height: `${scrollHeight}px` }}>
                 <View className={styles.tabs}>
                   {
                     item.list.map((listItem) => {
@@ -63,11 +56,10 @@ const Food = (props) => {
                     })
                   }
                 </View>
-                </ScrollView>
-              </AtTabsPane>
-            })
-          }
-        
+              </ScrollView>
+            </AtTabsPane>
+          })
+        }
       </AtTabs>
     </View>
   )

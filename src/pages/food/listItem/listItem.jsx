@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from '@tarojs/components'
-import styles from './listItem.scss'
+import styles from './listItem.module.scss'
 
 const ListItem = React.memo((props) => {
   const { data } = props;

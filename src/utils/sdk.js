@@ -9,3 +9,13 @@ export const getUserInfo = () => {
     })
   })
 }
+
+export const getSystemInfo = () => {
+  return new Promise((resolve, reject) => {
+    Taro.getSystemInfo({
+      success: res => {
+        resolve(res)
+      }
+    })
+  })
+}
