@@ -51,16 +51,13 @@ const Food = (props) => {
   const [isOpened, setIsOpened] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const [radioVal, setRadioVal] = useState('all');
+
   const handleClick = (current) => {
     setCurrent(current)
   }
 
-  const handleFilterIcon = () => {
-    setIsOpened(true)
-  }
-
-  const handleClose = () => {
-    setIsOpened(false)
+  const handleIsShowModal = (status) => {
+    return () => setIsOpened(status)
   }
 
   const handleChangeCheckBox = (val) => {
@@ -69,7 +66,7 @@ const Food = (props) => {
   const handleChangeRadioVal = (val) => {
     setRadioVal(val)
   }
-  console.log(checkedList)
+
   useEffect(async () => {
     const systemInfo = await getSystemInfo()
     setScrollHeight(systemInfo.windowHeight - 35)
@@ -77,7 +74,7 @@ const Food = (props) => {
 
   return (
     <View className={styles.index}>
-      <View className={styles.filter} onClick={handleFilterIcon}>
+      <View className={styles.filter} onClick={handleIsShowModal(true)}>
         <AtIcon value='filter' size='20' color='#9a9a9a'></AtIcon>
       </View>
       <AtTabs
@@ -102,7 +99,7 @@ const Food = (props) => {
           })
         }
       </AtTabs>
-      <AtFloatLayout isOpened={isOpened} title="筛选列表" onClose={handleClose}>
+      <AtFloatLayout isOpened={isOpened} title="筛选列表" onClose={handleIsShowModal(false)}>
         <PanelTitle>类型</PanelTitle>
         <AtRadio
           options={typeOptions}
