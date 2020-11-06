@@ -4,7 +4,6 @@ import styles from './listItem.module.scss'
 
 const ListItem = React.memo((props) => {
   const { data } = props;
-  console.log(data)
 
   return <View className={styles.container}>
     <View className={styles.content}>

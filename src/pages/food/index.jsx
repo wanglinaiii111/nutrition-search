@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView } from '@tarojs/components'
 import { getSystemInfo } from '../../utils/sdk'
-
-import { AtTabs, AtTabsPane } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio } from 'taro-ui'
 import styles from './index.module.scss'
+import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
+import { PanelTitle } from '../panel-title/index'
 
 const tabList = [
   {
@@ -25,13 +26,50 @@ const tabList = [
   { title: '粮油', list: [{ name: '小麦', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] }
 ]
 
+const checkboxOption = [{
+  value: 'list1',
+  label: 'iPhone X',
+}, {
+  value: 'list2',
+  label: 'HUAWEI P20'
+}, {
+  value: 'list3',
+  label: 'OPPO Find X',
+}, {
+  value: 'list4',
+  label: 'vivo NEX',
+}]
+const typeOptions = [
+  { label: '全部', value: 'all' },
+  { label: '收藏', value: 'collect' }
+]
+
+
 const Food = (props) => {
   const [current, setCurrent] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
+  const [isOpened, setIsOpened] = useState(false);
+  const [checkedList, setCheckedList] = useState([]);
+  const [radioVal, setRadioVal] = useState('all');
   const handleClick = (current) => {
     setCurrent(current)
   }
 
+  const handleFilterIcon = () => {
+    setIsOpened(true)
+  }
+
+  const handleClose = () => {
+    setIsOpened(false)
+  }
+
+  const handleChangeCheckBox = (val) => {
+    setCheckedList(val)
+  }
+  const handleChangeRadioVal = (val) => {
+    setRadioVal(val)
+  }
+  console.log(checkedList)
   useEffect(async () => {
     const systemInfo = await getSystemInfo()
     setScrollHeight(systemInfo.windowHeight - 35)
@@ -39,12 +77,15 @@ const Food = (props) => {
 
   return (
     <View className={styles.index}>
+      <View className={styles.filter} onClick={handleFilterIcon}>
+        <AtIcon value='filter' size='20' color='#9a9a9a'></AtIcon>
+      </View>
       <AtTabs
+        className='food-myTabs'
         current={current}
         scroll
         tabList={tabList}
         onClick={handleClick}>
-
         {
           tabList.map((item, index) => {
             return <AtTabsPane current={current} index={index}>
@@ -61,6 +102,20 @@ const Food = (props) => {
           })
         }
       </AtTabs>
+      <AtFloatLayout isOpened={isOpened} title="筛选列表" onClose={handleClose}>
+        <PanelTitle>类型</PanelTitle>
+        <AtRadio
+          options={typeOptions}
+          value={radioVal}
+          onClick={handleChangeRadioVal}
+        />
+        <PanelTitle>元素</PanelTitle>
+        <AtCheckbox
+          options={checkboxOption}
+          selectedList={checkedList}
+          onChange={handleChangeCheckBox}
+        />
+      </AtFloatLayout>
     </View>
   )
 }

@@ -1,0 +1,22 @@
+.title {
+  position: relative;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  padding-left: 20px;
+  color: #6a6a77;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.title::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 7rpx;
+  top: 50%;
+  margin-top: -18rpx;
+  width: 5rpx;
+  height: 39rpx;
+  background-color: #3694be;
+}
