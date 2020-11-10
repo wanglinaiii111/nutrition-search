@@ -27,7 +27,9 @@
 
 .upDragBox {
   position: relative;
-  text-align: center;
   color: #999;
-  font-size: 28rpx;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -6,7 +6,6 @@ import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
 import { PanelTitle } from '../panel-title/index'
-import Taro from '@tarojs/taro'
 
 const data = [
   {
@@ -55,9 +54,11 @@ const Food = (props) => {
   const [isOpened, setIsOpened] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const [radioVal, setRadioVal] = useState('all');
-  const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' })
-  const [isShowMore, setIsShowMore] = useState(false)
-  const [totalPage, set_totalPage] = useState(2)
+  const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' });
+  const [isShowMore, setIsShowMore] = useState(false);
+  const [totalPage, set_totalPage] = useState(2);
+  const [start_posi, set_start_posi] = useState({});
+  const [loadMore, set_loadMore] = useState(false);
 
   const handleClick = (current) => {
     setCurrent(current)
@@ -72,22 +73,6 @@ const Food = (props) => {
   }
   const handleChangeRadioVal = (val) => {
     setRadioVal(val)
-  }
-
-  const scrollToUpper = () => {
-    console.log('滚动到顶部')
-  }
-
-  const scrollToLower = () => {
-    if (totalPage > 1) {
-      setIsShowMore(true)
-      console.log('scrollToLower-滚动到底部事件-上拉加载更多')
-
-      setTimeout(() => {
-        console.log('停止上拉加载更多~')
-        setIsShowMore(false)
-      }, 2000);
-    }
   }
 
   const refresherRefresh = () => {
@@ -111,10 +96,55 @@ const Food = (props) => {
     set_tabList(data);
   }
 
+  const touchStart = (e) => {
+    set_start_posi(e.touches[0])
+  }
+
+  const touchmove = (e) => {
+    let move_posi = e.touches[0],
+      deviationX = 0.30, //左右偏移量(超过这个偏移量不执行下拉操作)
+      maxY = 50; //拉动的最大高度
+
+    let start_x = start_posi.clientX,
+      start_y = start_posi.clientY,
+      move_x = move_posi.clientX,
+      move_y = move_posi.clientY;
+
+    //得到偏移数值
+    let dev = Math.abs(move_x - start_x) / Math.abs(move_y - start_y);
+    if (dev < deviationX) {//当偏移数值大于设置的偏移数值时则不执行操作
+      let pY = Math.abs(move_y - start_y) / 3.5;//拖动倍率（使拖动的时候有粘滞的感觉--试了很多次 这个倍率刚好）
+
+      if (start_y - move_y > 0) {//上拉操作
+        if (pY >= maxY) {
+          pY = maxY
+        }
+
+        if (totalPage > 1) {
+          setIsShowMore(true)
+          setUpDragStyle({
+            height: pY < 30 ? 50 : pY + 'px'
+          })
+          set_loadMore(true)
+        }
+      }
+    }
+  }
+
   useEffect(async () => {
     const systemInfo = await getSystemInfo()
     setScrollHeight(systemInfo.windowHeight - 35)
   }, [])
+
+  useEffect(() => {
+    if (loadMore) {
+      setTimeout(() => {
+        console.log('停止上拉加载更多~')
+        setIsShowMore(false)
+        set_loadMore(false)
+      }, 2000);
+    }
+  }, [loadMore])
 
   return (
     <View className={styles.index}>
@@ -137,8 +167,8 @@ const Food = (props) => {
                 refresherTriggered={item.isFresh}
                 onRefresherRefresh={refresherRefresh}
                 enableBackToTop
-                onScrollToUpper={scrollToUpper}
-                onScrollToLower={scrollToLower}
+                onTouchMove={touchmove}
+                onTouchStart={touchStart}
               >
                 <View className={styles.tabs}>
                   {
