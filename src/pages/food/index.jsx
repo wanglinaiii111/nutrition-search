@@ -57,7 +57,7 @@ const Food = (props) => {
   const [radioVal, setRadioVal] = useState('all');
   const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' })
   const [isShowMore, setIsShowMore] = useState(false)
-  const [totalPage, set_totalPage] = useState(1)
+  const [totalPage, set_totalPage] = useState(2)
 
   const handleClick = (current) => {
     setCurrent(current)
@@ -82,6 +82,11 @@ const Food = (props) => {
     if (totalPage > 1) {
       setIsShowMore(true)
       console.log('scrollToLower-滚动到底部事件-上拉加载更多')
+
+      setTimeout(() => {
+        console.log('停止上拉加载更多~')
+        setIsShowMore(false)
+      }, 2000);
     }
   }
 
