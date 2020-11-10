@@ -1,9 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { View, Image, Swiper, SwiperItem,Text } from '@tarojs/components'
+import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import styles from './index.module.scss'
-import { AtFab } from 'taro-ui'
-
 // const _ = require("underscore");
 
 const Index = (props) => {
@@ -12,9 +10,6 @@ const Index = (props) => {
 
   return (
     <View className={styles.index}>
-      <AtFab>
-  <Text className='at-fab__icon at-icon at-icon-menu'></Text>
-</AtFab>
       <Swiper
         className='test-h'
         indicatorColor='#999'

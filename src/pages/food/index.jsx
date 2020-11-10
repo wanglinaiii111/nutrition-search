@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { View, ScrollView } from '@tarojs/components'
+import { View, ScrollView, Text } from '@tarojs/components'
 import { getSystemInfo } from '../../utils/sdk'
-import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio, AtActivityIndicator } from 'taro-ui'
 import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
 import { PanelTitle } from '../panel-title/index'
+import Taro from '@tarojs/taro'
 
-const tabList = [
+const data = [
   {
     title: '蔬菜',
+    isFresh: true,
     list: [{ name: '菠菜菠菜菠菜菠菜菠菜菠菜菠菜菠菜菠', content: { '钠': '20g', '镁': '20mg', '铁': '20KJ', '钠1': '20%' } },
     { name: '菜花', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克', '钠1': '20%' } },
     { name: '菜花', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克', '钠1': '20%' } },
@@ -18,12 +20,13 @@ const tabList = [
   },
   {
     title: '水果',
+    isFresh: true,
     list: [{ name: '苹果', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }]
   },
-  { title: '豆制品', list: [{ name: '豆浆', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
-  { title: '肉类', list: [{ name: '牛肉', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
-  { title: '油盐酱醋', list: [{ name: '盐', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
-  { title: '粮油', list: [{ name: '小麦', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] }
+  { title: '豆制品', isFresh: true, list: [{ name: '豆浆', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
+  { title: '肉类', isFresh: true, list: [{ name: '牛肉', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
+  { title: '油盐酱醋', isFresh: true, list: [{ name: '盐', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
+  { title: '粮油', isFresh: true, list: [{ name: '小麦', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] }
 ]
 
 const checkboxOption = [{
@@ -46,11 +49,15 @@ const typeOptions = [
 
 
 const Food = (props) => {
+  const [tabList, set_tabList] = useState(data);
   const [current, setCurrent] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const [radioVal, setRadioVal] = useState('all');
+  const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' })
+  const [isShowMore, setIsShowMore] = useState(false)
+  const [totalPage, set_totalPage] = useState(1)
 
   const handleClick = (current) => {
     setCurrent(current)
@@ -65,6 +72,38 @@ const Food = (props) => {
   }
   const handleChangeRadioVal = (val) => {
     setRadioVal(val)
+  }
+
+  const scrollToUpper = () => {
+    console.log('滚动到顶部')
+  }
+
+  const scrollToLower = () => {
+    if (totalPage > 1) {
+      setIsShowMore(true)
+      console.log('scrollToLower-滚动到底部事件-上拉加载更多')
+    }
+  }
+
+  const refresherRefresh = () => {
+    setIsShowMore(false)
+    changeListStatus(true)
+    console.log('下拉刷新被触发')
+
+    setTimeout(() => {
+      console.log('停止下拉刷新~')
+      changeListStatus(false)
+    }, 2000);
+  }
+
+  const changeListStatus = (status) => {
+    const data = tabList.map((item, index) => {
+      if (index === current) {
+        return { ...item, isFresh: status }
+      }
+      return item;
+    })
+    set_tabList(data);
   }
 
   useEffect(async () => {
@@ -86,7 +125,16 @@ const Food = (props) => {
         {
           tabList.map((item, index) => {
             return <AtTabsPane current={current} index={index}>
-              <ScrollView scroll-y style={{ height: `${scrollHeight}px` }}>
+              <ScrollView
+                scroll-y
+                style={{ height: `${scrollHeight}px` }}
+                refresherEnabled
+                refresherTriggered={item.isFresh}
+                onRefresherRefresh={refresherRefresh}
+                enableBackToTop
+                onScrollToUpper={scrollToUpper}
+                onScrollToLower={scrollToLower}
+              >
                 <View className={styles.tabs}>
                   {
                     item.list.map((listItem) => {
@@ -94,6 +142,15 @@ const Food = (props) => {
                     })
                   }
                 </View>
+
+                <View className={styles.upDragBox} style={upDragStyle}>
+                  {
+                    isShowMore ?
+                      <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
+                      : totalPage > 1 && <Text>上拉加载更多</Text>
+                  }
+                </View>
+
               </ScrollView>
             </AtTabsPane>
           })
