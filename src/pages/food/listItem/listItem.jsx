@@ -3,9 +3,11 @@ import { View } from '@tarojs/components'
 import styles from './listItem.module.scss'
 
 const ListItem = React.memo((props) => {
-  const { data } = props;
-
-  return <View className={styles.container}>
+  const { data, clickToDetail } = props;
+  const click = () => {
+    clickToDetail()
+  }
+  return <View className={styles.container} onClick={click}>
     <View className={styles.content}>
       <View className={styles.avatar}></View>
       <View className={styles.name}>{data.name}</View>

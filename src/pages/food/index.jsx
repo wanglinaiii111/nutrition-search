@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView, Text } from '@tarojs/components'
 import { getSystemInfo } from '../../utils/sdk'
-import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio, AtActivityIndicator } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio, AtActivityIndicator, AtSearchBar, AtDrawer, AtTag } from 'taro-ui'
 import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
 import { PanelTitle } from '../panel-title/index'
+import { batch } from 'react-redux'
+import Taro from '@tarojs/taro'
 
 const data = [
   {
@@ -59,6 +61,8 @@ const Food = (props) => {
   const [totalPage, set_totalPage] = useState(2);
   const [start_posi, set_start_posi] = useState({});
   const [loadMore, set_loadMore] = useState(false);
+  const [searchVal, set_searchVal] = useState('');
+  const [isShowMenu, setIsShowMenu] = useState(false);
 
   const handleClick = (current) => {
     setCurrent(current)
@@ -66,6 +70,10 @@ const Food = (props) => {
 
   const handleIsShowModal = (status) => {
     return () => setIsOpened(status)
+  }
+
+  const handleIsShowMenu = (status) => {
+    return () => setIsShowMenu(status)
   }
 
   const handleChangeCheckBox = (val) => {
@@ -121,14 +129,30 @@ const Food = (props) => {
         }
 
         if (totalPage > 1) {
-          setIsShowMore(true)
-          setUpDragStyle({
-            height: pY < 30 ? 50 : pY + 'px'
+          batch(() => {
+            setIsShowMore(true)
+            setUpDragStyle({
+              height: pY < 30 ? 50 : pY + 'px'
+            })
+            set_loadMore(true)
           })
-          set_loadMore(true)
         }
       }
     }
+  }
+
+  const clickToDetail = () => {
+    Taro.navigateTo({
+      url: '../classifyDetail/index'
+    })
+  }
+
+  const changeSearchVal = (val) => {
+    set_searchVal(val)
+  }
+
+  const onActionClick = () => {
+    console.log(searchVal)
   }
 
   useEffect(async () => {
@@ -148,8 +172,20 @@ const Food = (props) => {
 
   return (
     <View className={styles.index}>
-      <View className={styles.filter} onClick={handleIsShowModal(true)}>
-        <AtIcon value='filter' size='20' color='#9a9a9a'></AtIcon>
+      <View className={styles.header}>
+        <AtSearchBar
+          className={`${styles.search} food-search`}
+          value={searchVal}
+          onChange={changeSearchVal}
+          onActionClick={onActionClick}
+        />
+        <View className={styles.filter} onClick={handleIsShowModal(true)}>
+          <AtIcon value='filter' size='20' color='#9a9a9a'></AtIcon>
+        </View>
+      </View>
+
+      <View className={styles.nav} onClick={handleIsShowMenu(true)}>
+        <AtIcon value='menu' size='20' color='#9a9a9a'></AtIcon>
       </View>
       <AtTabs
         className='food-myTabs'
@@ -173,7 +209,7 @@ const Food = (props) => {
                 <View className={styles.tabs}>
                   {
                     item.list.map((listItem) => {
-                      return <ListItem data={listItem}></ListItem>
+                      return <ListItem clickToDetail={clickToDetail} data={listItem}></ListItem>
                     })
                   }
                 </View>
@@ -205,6 +241,31 @@ const Food = (props) => {
           onChange={handleChangeCheckBox}
         />
       </AtFloatLayout>
+      <AtDrawer
+        show={isShowMenu}
+        width='250px'
+        right={true}
+        mask
+        onClose={handleIsShowMenu(false)}
+      >
+        <View className={styles.drawer}>
+          <PanelTitle>导航</PanelTitle>
+          <View className={styles.tagContainer}>
+            <View className={styles.tags}>
+              <Text>薯类、淀粉及制品</Text>
+            </View>
+            <View className={styles.tags}>
+              <Text>干豆类及制品</Text>
+            </View>
+            <View className={styles.tags}>
+              <Text>菌藻类</Text>
+            </View>
+            <View className={styles.tags}>
+              <Text>蔬菜类及制品</Text>
+            </View>
+          </View>
+        </View>
+      </AtDrawer>
     </View>
   )
 }

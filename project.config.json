@@ -39,12 +39,6 @@
   "simulatorPluginLibVersion": {},
   "libVersion": "2.13.1",
   "condition": {
-    "search": {
-      "list": []
-    },
-    "conversation": {
-      "list": []
-    },
     "plugin": {
       "list": []
     },
@@ -60,6 +54,13 @@
           "id": -1,
           "name": "pages/food/index",
           "pathName": "pages/food/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/classifyDetail/index",
+          "pathName": "pages/classifyDetail/index",
+          "query": "",
           "scene": null
         }
       ]
