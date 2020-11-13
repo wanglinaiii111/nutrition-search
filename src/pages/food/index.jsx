@@ -100,28 +100,7 @@ const Food = (props) => {
   }
 
   const refresherRefresh = async () => {
-    setIsShowMore(false)
     console.log('下拉刷新被触发')
-    // const len = foodList.length;
-    // if (loadText === '没有更多了~') {
-    //   return;
-    // }
-    // const cur = classList[current]
-    // const param = {
-    //   sortCol: 'code',
-    //   direction: 1,
-    //   lastValue: foodList[len - 1].code,
-    //   classCode: cur.code,
-    //   searchWord: '',
-    //   elements: ["Edible", "Water"]
-    // }
-    // const list = await getFoodList(param);
-    // dispatch(getMoreListAction(list));
-    // console.log('停止下拉刷新~')
-    // if (list.length === 0) {
-    //   return set_loadText('没有更多了~')
-    // }
-    // return set_loadText('上拉加载更多')
   }
 
   const touchStart = (e) => {
@@ -150,14 +129,21 @@ const Food = (props) => {
         if (pY >= maxY) {
           pY = maxY
         }
-
         batch(() => {
-          setIsShowMore(true)
-          setUpDragStyle({
-            height: pY < 30 ? 50 : pY + 'px'
-          })
+          if (!isShowMore) {
+            setIsShowMore(true)
+            setUpDragStyle({
+              height: pY < 30 ? 50 : pY + 'px'
+            })
+          }
         })
       }
+    }
+  }
+
+  const touchEnd=()=>{
+    if (isShowMore) {
+      load()
     }
   }
 
@@ -173,6 +159,35 @@ const Food = (props) => {
 
   const onActionClick = () => {
     console.log(searchVal)
+  }
+
+  const load =  () => {
+    batch(async () => {
+      if (isShowMore) {
+        if (loadText === '没有更多了~') {
+          return;
+        }
+        const len = foodList.length;
+        const cur = classList[current]
+        const param = {
+          sortCol: 'code',
+          direction: 1,
+          lastValue: foodList[len - 1].code,
+          classCode: cur.code,
+          searchWord: '',
+          elements: ["Edible", "Water"]
+        }
+        const list = await getFoodList(param);
+        dispatch(getMoreListAction(list));
+
+        console.log('停止上拉加载更多~')
+        setIsShowMore(false);
+        if (list.length === 0) {
+          return set_loadText('没有更多了~')
+        }
+        return set_loadText('上拉加载更多')
+      }
+    })
   }
 
   useEffect(async () => {
@@ -199,38 +214,11 @@ const Food = (props) => {
       dispatch(getClassAction(foodC));
       dispatch(getListAction(list));
     })
-
   }, [])
 
-  useEffect(() => {
-    const load = async () => {
-      if (isShowMore) {
-        if (loadText === '没有更多了~') {
-          return;
-        }
-        const len = foodList.length;
-        const cur = classList[current]
-        const param = {
-          sortCol: 'code',
-          direction: 1,
-          lastValue: foodList[len - 1].code,
-          classCode: cur.code,
-          searchWord: '',
-          elements: ["Edible", "Water"]
-        }
-        const list = await getFoodList(param);
-        dispatch(getMoreListAction(list));
-        setIsShowMore(false);
-        console.log('停止上拉加载更多~')
-        if (list.length === 0) {
-          return set_loadText('没有更多了~')
-        }
-        return set_loadText('上拉加载更多')
-      }
-    }
-    load()
-
-  }, [isShowMore])
+  // useEffect(() => {
+  //   load()
+  // }, [isShowMore])
 
   return (
     <View className={styles.index}>
@@ -267,6 +255,7 @@ const Food = (props) => {
                 enableBackToTop
                 onTouchMove={touchmove}
                 onTouchStart={touchStart}
+                onTouchEnd={touchEnd}
               >
                 <View className={styles.tabs}>
                   {
