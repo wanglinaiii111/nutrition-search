@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import tab from './tab'
+import food from './food'
 
 export default combineReducers({
-  tab
+  food
 })

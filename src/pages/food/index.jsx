@@ -6,8 +6,10 @@ import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
 import { PanelTitle } from '../panel-title/index'
-import { batch } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import Taro from '@tarojs/taro'
+import { getFoodClass, getFoodList, getElementClass, getElement, getFoodInfo } from '../../utils/api'
+import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction } from '../../actions/food'
 
 const data = [
   {
@@ -50,6 +52,7 @@ const typeOptions = [
 
 
 const Food = (props) => {
+  const dispatch = useDispatch();
   const [tabList, set_tabList] = useState(data);
   const [current, setCurrent] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
@@ -58,14 +61,27 @@ const Food = (props) => {
   const [radioVal, setRadioVal] = useState('all');
   const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' });
   const [isShowMore, setIsShowMore] = useState(false);
-  const [totalPage, set_totalPage] = useState(2);
   const [start_posi, set_start_posi] = useState({});
-  const [loadMore, set_loadMore] = useState(false);
   const [searchVal, set_searchVal] = useState('');
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const [loadText, set_loadText] = useState('上拉加载更多');
 
-  const handleClick = (current) => {
+  const classList = useSelector(state => state.food.classList)
+  const foodList = useSelector(state => state.food.foodList)
+
+  const handleClickTab = async (current) => {
     setCurrent(current)
+    const cur = classList[current]
+    const param = {
+      sortCol: 'code',
+      direction: 1,
+      lastValue: '',
+      classCode: cur.code,
+      searchWord: '',
+      elements: ["Edible", "Water"]
+    }
+    const list = await getFoodList(param);
+    dispatch(getListAction(list));
   }
 
   const handleIsShowModal = (status) => {
@@ -83,25 +99,29 @@ const Food = (props) => {
     setRadioVal(val)
   }
 
-  const refresherRefresh = () => {
+  const refresherRefresh = async () => {
     setIsShowMore(false)
-    changeListStatus(true)
     console.log('下拉刷新被触发')
-
-    setTimeout(() => {
-      console.log('停止下拉刷新~')
-      changeListStatus(false)
-    }, 2000);
-  }
-
-  const changeListStatus = (status) => {
-    const data = tabList.map((item, index) => {
-      if (index === current) {
-        return { ...item, isFresh: status }
-      }
-      return item;
-    })
-    set_tabList(data);
+    // const len = foodList.length;
+    // if (loadText === '没有更多了~') {
+    //   return;
+    // }
+    // const cur = classList[current]
+    // const param = {
+    //   sortCol: 'code',
+    //   direction: 1,
+    //   lastValue: foodList[len - 1].code,
+    //   classCode: cur.code,
+    //   searchWord: '',
+    //   elements: ["Edible", "Water"]
+    // }
+    // const list = await getFoodList(param);
+    // dispatch(getMoreListAction(list));
+    // console.log('停止下拉刷新~')
+    // if (list.length === 0) {
+    //   return set_loadText('没有更多了~')
+    // }
+    // return set_loadText('上拉加载更多')
   }
 
   const touchStart = (e) => {
@@ -109,6 +129,9 @@ const Food = (props) => {
   }
 
   const touchmove = (e) => {
+    if (loadText === '没有更多了~') {
+      return;
+    }
     let move_posi = e.touches[0],
       deviationX = 0.30, //左右偏移量(超过这个偏移量不执行下拉操作)
       maxY = 50; //拉动的最大高度
@@ -128,15 +151,12 @@ const Food = (props) => {
           pY = maxY
         }
 
-        if (totalPage > 1) {
-          batch(() => {
-            setIsShowMore(true)
-            setUpDragStyle({
-              height: pY < 30 ? 50 : pY + 'px'
-            })
-            set_loadMore(true)
+        batch(() => {
+          setIsShowMore(true)
+          setUpDragStyle({
+            height: pY < 30 ? 50 : pY + 'px'
           })
-        }
+        })
       }
     }
   }
@@ -158,17 +178,59 @@ const Food = (props) => {
   useEffect(async () => {
     const systemInfo = await getSystemInfo()
     setScrollHeight(systemInfo.windowHeight - 35)
+    const [elementC, element, foodC] = await Promise.all([getElementClass(), getElement(), getFoodClass()])
+    console.log(elementC, element, foodC, '+++++')
+    const param = {
+      sortCol: 'code',
+      direction: 1,
+      lastValue: '',
+      classCode: 1,
+      searchWord: '',
+      elements: ["Edible", "Water"]
+    }
+    const list = await getFoodList(param)
+    const foodinfo = await getFoodInfo({
+      code: 259
+    })
+    console.log(foodinfo, 'foodinfo')
+    batch(() => {
+      dispatch(getElementClassAction(elementC));
+      dispatch(getElementAction(element));
+      dispatch(getClassAction(foodC));
+      dispatch(getListAction(list));
+    })
+
   }, [])
 
   useEffect(() => {
-    if (loadMore) {
-      setTimeout(() => {
+    const load = async () => {
+      if (isShowMore) {
+        if (loadText === '没有更多了~') {
+          return;
+        }
+        const len = foodList.length;
+        const cur = classList[current]
+        const param = {
+          sortCol: 'code',
+          direction: 1,
+          lastValue: foodList[len - 1].code,
+          classCode: cur.code,
+          searchWord: '',
+          elements: ["Edible", "Water"]
+        }
+        const list = await getFoodList(param);
+        dispatch(getMoreListAction(list));
+        setIsShowMore(false);
         console.log('停止上拉加载更多~')
-        setIsShowMore(false)
-        set_loadMore(false)
-      }, 2000);
+        if (list.length === 0) {
+          return set_loadText('没有更多了~')
+        }
+        return set_loadText('上拉加载更多')
+      }
     }
-  }, [loadMore])
+    load()
+
+  }, [isShowMore])
 
   return (
     <View className={styles.index}>
@@ -191,9 +253,43 @@ const Food = (props) => {
         className='food-myTabs'
         current={current}
         scroll
-        tabList={tabList}
-        onClick={handleClick}>
+        tabList={classList}
+        onClick={handleClickTab}>
         {
+          classList.map((item, index) => {
+            return <AtTabsPane current={current} index={index}>
+              <ScrollView
+                scroll-y
+                style={{ height: `${scrollHeight}px` }}
+                refresherEnabled
+                refresherTriggered={item.isFresh}
+                onRefresherRefresh={refresherRefresh}
+                enableBackToTop
+                onTouchMove={touchmove}
+                onTouchStart={touchStart}
+              >
+                <View className={styles.tabs}>
+                  {
+                    foodList.map((item) => {
+                      return <ListItem clickToDetail={clickToDetail} data={item}></ListItem>
+                    })
+                  }
+
+                </View>
+
+                <View className={styles.upDragBox} style={upDragStyle}>
+                  {
+                    isShowMore ?
+                      <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
+                      : <Text>{loadText}</Text>
+                  }
+                </View>
+
+              </ScrollView>
+            </AtTabsPane>
+          })
+        }
+        {/* {
           tabList.map((item, index) => {
             return <AtTabsPane current={current} index={index}>
               <ScrollView
@@ -225,7 +321,7 @@ const Food = (props) => {
               </ScrollView>
             </AtTabsPane>
           })
-        }
+        } */}
       </AtTabs>
       <AtFloatLayout isOpened={isOpened} title="筛选列表" onClose={handleIsShowModal(false)}>
         <PanelTitle>类型</PanelTitle>

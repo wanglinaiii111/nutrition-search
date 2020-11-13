@@ -6,7 +6,6 @@ import styles from './index.module.scss'
 
 const Index = (props) => {
   const dispatch = useDispatch();
-  const page = useSelector((state) => state.tab.page);
 
   return (
     <View className={styles.index}>

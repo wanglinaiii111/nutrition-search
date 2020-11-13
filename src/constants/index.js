@@ -1,1 +1,6 @@
-export const SET_PAGE = 'PAGE/SET_PAGE'
+export const GET_CLASS = 'FOOD/get-class'
+export const GET_LIST = 'FOOD/get-list'
+export const GET_MORE_LIST = 'FOOD/get-more-list'
+export const GET_ELEMENT_CLASS = 'FOOD/get-element-class'
+export const GET_ELEMENT = 'FOOD/get-element'
+export const SET_TAB_FRESH_STATUS = 'FOOD/set_tab_fresh_status'
