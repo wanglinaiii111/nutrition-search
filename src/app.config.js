@@ -20,12 +20,12 @@ export default {
     borderStyle: "black",
     list: [{
       pagePath: "pages/index/index",
-      text: "首页",
+      text: "资讯",
       iconPath: "./image/new1.png",
       selectedIconPath: "./image/new2.png"
     }, {
       pagePath: "pages/food/index",
-      text: "分类",
+      text: "食材",
       iconPath: "./image/food1.png",
       selectedIconPath: "./image/food2.png"
     }, {
