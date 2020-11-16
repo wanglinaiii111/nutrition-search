@@ -3,7 +3,7 @@ export default {
     'pages/index/index',
     'pages/food/index',
     'pages/personal-center/index',
-    // 'pages/classifyDetail/index'
+    'pages/classifyDetail/index'
   ],
   window: {
     backgroundTextStyle: 'light',

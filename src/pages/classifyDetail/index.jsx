@@ -1,33 +1,60 @@
-import React from 'react';
-import { View,Text } from '@tarojs/components'
+import React, { useEffect, useState } from 'react';
+import { View } from '@tarojs/components'
 import styles from './index.module.scss'
-import { AtCard, AtList, AtListItem } from 'taro-ui'
-import { PanelTitle } from '../panel-title/index'
+import { AtCard, AtList, AtListItem, AtAccordion } from 'taro-ui'
+import { getFoodInfo } from '../../utils/api'
+import { getFoodInfoAction, setEleClassStatusAction } from '../../actions/food'
+import { useDispatch, useSelector } from 'react-redux';
 
 const Detail = (props) => {
+  const dispatch = useDispatch()
+  const foodInfo = useSelector(state => state.food.foodInfo)
+  const elementClassMap = useSelector(state => state.food.elementClassMap)
+  const elementMap = useSelector(state => state.food.elementMap)
 
-  const handleClickBack = () => {
-    console.log('back')
+  const handleClick = (index, status) => {
+    dispatch(setEleClassStatusAction(index, status))
   }
+
+  const getParams = (key) => {
+    const pages = getCurrentPages();
+    const currentPage = pages[pages.length - 1];
+    const options = currentPage.options;
+    return options[key]
+  }
+
+  useEffect(async () => {
+    const code = getParams('code') || 259;
+    const info = await getFoodInfo({
+      code: code
+    })
+    dispatch(getFoodInfoAction(info))
+  }, [])
   return <View>
-    <Text className={styles.title}>营养成分（每100克）</Text>
-    <AtCard
-      extra='谷类及制品'
-      title='小麦粉(标准粉)'
-      thumb='http://www.logoquan.com/upload/list/20180421/logoquan15259400209.PNG'
+    
+    <View className={styles.title}><View className={styles.icon}></View>营养成分（每100克）</View>
+    <AtCard className={styles.card}
+      extra={foodInfo.info}
+      title={foodInfo.name}
+      note={`食材类别：${foodInfo.className}`}
     >
-      <PanelTitle>能量与相关成分</PanelTitle>
-      <AtList>
-        <AtListItem title='水分(Water)' extraText='12.7g' />
-        <AtListItem title='能量(Energy)' extraText='1497KJ' />
-        <AtListItem title='蛋白质(Protein)' extraText='11.2g' />
-      </AtList>
-      <PanelTitle>维生素</PanelTitle>
-      <AtList>
-        <AtListItem title='硫胺素(Thiamin)' extraText='12.7g' />
-        <AtListItem title='核黄素(Riboflavin)' extraText='1497KJ' />
-        <AtListItem title='烟酸(Niacin)' extraText='11.2g' />
-      </AtList>
+      {
+        elementClassMap.map((classItem, index) => {
+          return <AtAccordion
+            open={classItem.isOpened}
+            onClick={e => handleClick(index, e)}
+            title={classItem.name}
+          >
+            <AtList hasBorder={false}>
+              {
+                elementMap.map(ele => {
+                  return classItem.code === ele.class && <AtListItem title={ele.name} extraText={foodInfo[ele.code]} />
+                })
+              }
+            </AtList>
+          </AtAccordion>
+        })
+      }
     </AtCard>
   </View>
 }

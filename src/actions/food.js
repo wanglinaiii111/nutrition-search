@@ -3,7 +3,8 @@ import {
   GET_LIST,
   GET_ELEMENT_CLASS,
   GET_ELEMENT,
-  SET_TAB_FRESH_STATUS
+  GET_FOOD_INFO,
+  SET_ELEMENT_CLASS_STATUS
 } from '../constants'
 
 export const getClassAction = (data) => {
@@ -43,6 +44,14 @@ export const getElementClassAction = (data) => {
   }
 }
 
+export const setEleClassStatusAction = (index, status) => {
+  return {
+    type: SET_ELEMENT_CLASS_STATUS,
+    index,
+    status
+  }
+}
+
 export const getElementAction = (data) => {
   return {
     type: GET_ELEMENT,
@@ -50,9 +59,9 @@ export const getElementAction = (data) => {
   }
 }
 
-export const setTabFreshStatus = (status) => {
+export const getFoodInfoAction = (data) => {
   return {
-    type: SET_TAB_FRESH_STATUS,
-    status
+    type: GET_FOOD_INFO,
+    data
   }
 }

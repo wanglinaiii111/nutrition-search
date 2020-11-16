@@ -48,7 +48,7 @@ const Food = (props) => {
   const foodList = useSelector(state => state.food.foodList)
 
   const handleClickTab = async (current) => {
-    dispatch(getListAction([]));
+    // dispatch(getListAction([]));
     setCurrent(current)
     const cur = classList[current]
     const param = {
@@ -122,10 +122,12 @@ const Food = (props) => {
     }
   }
 
-  const clickToDetail = () => {
-    Taro.navigateTo({
-      url: '../classifyDetail/index'
-    })
+  const clickToDetail = (code) => {
+    return () => {
+      Taro.navigateTo({
+        url: '../classifyDetail/index?code=' + code
+      })
+    }
   }
 
   const changeSearchVal = (val) => {
@@ -179,10 +181,6 @@ const Food = (props) => {
       elements: ["Edible", "Water"]
     }
     const list = await getFoodList(param)
-    const foodinfo = await getFoodInfo({
-      code: 259
-    })
-    console.log(foodinfo, 'foodinfo')
     batch(() => {
       dispatch(getElementClassAction(elementC));
       dispatch(getElementAction(element));
@@ -221,7 +219,37 @@ const Food = (props) => {
         {
           classList.map((item, index) => {
             return <AtTabsPane current={current} index={index}>
-              <ScrollView
+              <View style={{ height: `${scrollHeight}px` }}>
+                <ScrollView
+                  scroll-y
+                  style={{ height: `${scrollHeight}px` }}
+                  onTouchMove={touchmove}
+                  onTouchStart={touchStart}
+                  onTouchEnd={touchEnd}
+                >
+
+                  <View className={styles.tabs}>
+                    {
+                      current === index &&
+                      foodList.map((item) => {
+                        return <ListItem clickToDetail={clickToDetail(item.code)} data={item}></ListItem>
+                      })
+                    }
+
+                  </View>
+
+                  <View className={styles.upDragBox} style={upDragStyle}>
+                    {
+                      isShowMore ?
+                        <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
+                        : <Text>{loadText}</Text>
+                    }
+                  </View>
+
+                </ScrollView>
+              </View>
+
+              {/* <ScrollView
                 scroll-y
                 style={{ height: `${scrollHeight}px` }}
                 enableBackToTop
@@ -231,7 +259,8 @@ const Food = (props) => {
               >
 
                 <View className={styles.tabs}>
-                  {current === index &&
+                  {
+                    current === index &&
                     foodList.map((item) => {
                       return <ListItem clickToDetail={clickToDetail} data={item}></ListItem>
                     })
@@ -247,7 +276,7 @@ const Food = (props) => {
                   }
                 </View>
 
-              </ScrollView>
+              </ScrollView> */}
             </AtTabsPane>
           })
         }

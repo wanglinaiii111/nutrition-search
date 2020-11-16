@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "17883988",
+      "name": "营养",
+      "font_class": "yingyang",
+      "unicode": "e6d3",
+      "unicode_decimal": 59091
+    },
+    {
+      "icon_id": "5893823",
+      "name": "营养菜单",
+      "font_class": "yingyangcaidan",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "13856491",
+      "name": "营养科",
+      "font_class": "yingyangke",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "17605540",
+      "name": "营养科",
+      "font_class": "yingyangke1",
+      "unicode": "e81d",
+      "unicode_decimal": 59421
+    },
+    {
       "icon_id": "8157608",
       "name": "谷物 麦",
       "font_class": "caishichang-",
