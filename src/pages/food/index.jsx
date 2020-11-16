@@ -70,6 +70,7 @@ const Food = (props) => {
   const foodList = useSelector(state => state.food.foodList)
 
   const handleClickTab = async (current) => {
+    dispatch(getListAction([]));
     setCurrent(current)
     const cur = classList[current]
     const param = {
@@ -141,7 +142,7 @@ const Food = (props) => {
     }
   }
 
-  const touchEnd=()=>{
+  const touchEnd = () => {
     if (isShowMore) {
       load()
     }
@@ -161,7 +162,7 @@ const Food = (props) => {
     console.log(searchVal)
   }
 
-  const load =  () => {
+  const load = () => {
     batch(async () => {
       if (isShowMore) {
         if (loadText === '没有更多了~') {
@@ -258,7 +259,7 @@ const Food = (props) => {
                 onTouchEnd={touchEnd}
               >
                 <View className={styles.tabs}>
-                  {
+                  {current === index &&
                     foodList.map((item) => {
                       return <ListItem clickToDetail={clickToDetail} data={item}></ListItem>
                     })

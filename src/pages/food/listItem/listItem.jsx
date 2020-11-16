@@ -5,15 +5,10 @@ import { useSelector } from 'react-redux';
 
 const ListItem = React.memo((props) => {
   const { data, clickToDetail } = props;
-  const [dataMap,set_dataMap] = useState([])
   const elementMap = useSelector(state => state.food.elementMap)
   const click = () => {
     clickToDetail()
   }
-
-  useEffect(()=>{
-    set_dataMap(Object.keys(data.eles))
-  },[])
 
   return <View className={styles.container} onClick={click}>
     <View className={styles.content}>
@@ -22,22 +17,19 @@ const ListItem = React.memo((props) => {
     </View>
     <View className={styles.list}>
       {
-        dataMap
+        Object.keys(data.eles)
           .map(item => {
             return <>
               <View
                 className={styles.listItem}
               >
-                {
-                  item
-                }
-                {/* <View className={styles.elementName}>{
+                <View className={styles.elementName}>{
                   elementMap.map(e => {
                     if (e.code === item) {
                       return e.name
                     }
                   })
-                }</View> */}
+                }</View>
                 <View className={styles.zhi}>
                   {data.eles[item]}
                 </View>
