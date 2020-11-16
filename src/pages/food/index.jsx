@@ -11,27 +11,6 @@ import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement, getFoodInfo } from '../../utils/api'
 import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction } from '../../actions/food'
 
-const data = [
-  {
-    title: '蔬菜',
-    isFresh: true,
-    list: [{ name: '菠菜菠菜菠菜菠菜菠菜菠菜菠菜菠菜菠', content: { '钠': '20g', '镁': '20mg', '铁': '20KJ', '钠1': '20%' } },
-    { name: '菜花', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克', '钠1': '20%' } },
-    { name: '菜花', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克', '钠1': '20%' } },
-    { name: '菜花', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克', '钠1': '20%' } },
-    { name: '菜花', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克', '钠1': '20%' } }]
-  },
-  {
-    title: '水果',
-    isFresh: true,
-    list: [{ name: '苹果', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }]
-  },
-  { title: '豆制品', isFresh: true, list: [{ name: '豆浆', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
-  { title: '肉类', isFresh: true, list: [{ name: '牛肉', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
-  { title: '油盐酱醋', isFresh: true, list: [{ name: '盐', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] },
-  { title: '粮油', isFresh: true, list: [{ name: '小麦', content: { '钠': '20毫克', '镁': '20毫克', '铁': '20毫克' } }] }
-]
-
 const checkboxOption = [{
   value: 'list1',
   label: 'iPhone X',
@@ -53,7 +32,6 @@ const typeOptions = [
 
 const Food = (props) => {
   const dispatch = useDispatch();
-  const [tabList, set_tabList] = useState(data);
   const [current, setCurrent] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
@@ -98,10 +76,6 @@ const Food = (props) => {
   }
   const handleChangeRadioVal = (val) => {
     setRadioVal(val)
-  }
-
-  const refresherRefresh = async () => {
-    console.log('下拉刷新被触发')
   }
 
   const touchStart = (e) => {
@@ -250,14 +224,12 @@ const Food = (props) => {
               <ScrollView
                 scroll-y
                 style={{ height: `${scrollHeight}px` }}
-                refresherEnabled
-                refresherTriggered={item.isFresh}
-                onRefresherRefresh={refresherRefresh}
                 enableBackToTop
                 onTouchMove={touchmove}
                 onTouchStart={touchStart}
                 onTouchEnd={touchEnd}
               >
+
                 <View className={styles.tabs}>
                   {current === index &&
                     foodList.map((item) => {
@@ -279,39 +251,6 @@ const Food = (props) => {
             </AtTabsPane>
           })
         }
-        {/* {
-          tabList.map((item, index) => {
-            return <AtTabsPane current={current} index={index}>
-              <ScrollView
-                scroll-y
-                style={{ height: `${scrollHeight}px` }}
-                refresherEnabled
-                refresherTriggered={item.isFresh}
-                onRefresherRefresh={refresherRefresh}
-                enableBackToTop
-                onTouchMove={touchmove}
-                onTouchStart={touchStart}
-              >
-                <View className={styles.tabs}>
-                  {
-                    item.list.map((listItem) => {
-                      return <ListItem clickToDetail={clickToDetail} data={listItem}></ListItem>
-                    })
-                  }
-                </View>
-
-                <View className={styles.upDragBox} style={upDragStyle}>
-                  {
-                    isShowMore ?
-                      <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
-                      : totalPage > 1 && <Text>上拉加载更多</Text>
-                  }
-                </View>
-
-              </ScrollView>
-            </AtTabsPane>
-          })
-        } */}
       </AtTabs>
       <AtFloatLayout isOpened={isOpened} title="筛选列表" onClose={handleIsShowModal(false)}>
         <PanelTitle>类型</PanelTitle>
