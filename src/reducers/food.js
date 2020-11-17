@@ -4,7 +4,8 @@ import {
   GET_ELEMENT_CLASS,
   GET_ELEMENT,
   GET_FOOD_INFO,
-  SET_ELEMENT_CLASS_STATUS
+  SET_ELEMENT_CLASS_STATUS,
+  SET_TAB_DATA
 } from '../constants'
 
 const INITIAL_STATE = {
@@ -13,6 +14,7 @@ const INITIAL_STATE = {
   elementClassMap: [],
   elementMap: [],
   foodInfo: {},
+  tabData: []
 }
 
 export default function counter(state = INITIAL_STATE, action) {
@@ -27,6 +29,21 @@ export default function counter(state = INITIAL_STATE, action) {
       return {
         ...state,
         foodList: action.data
+      }
+      break;
+    case SET_TAB_DATA:
+      if (action.index === null) {
+        return {
+          ...state,
+          tabData: action.data
+        }
+      }
+      return {
+        ...state,
+        tabData: {
+          ...state.tabData,
+          [action.index]: [...state.tabData[action.index], ...action.data]
+        }
       }
       break;
     case GET_ELEMENT_CLASS:

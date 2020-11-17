@@ -9,7 +9,7 @@ import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement, getFoodInfo } from '../../utils/api'
-import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction } from '../../actions/food'
+import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction, setTabDataAction } from '../../actions/food'
 
 const checkboxOption = [{
   value: 'list1',
@@ -46,36 +46,41 @@ const Food = (props) => {
 
   const classList = useSelector(state => state.food.classList)
   const foodList = useSelector(state => state.food.foodList)
+  const tabData = useSelector(state => state.food.tabData)
 
   const getListData = async (current) => {
+    const len = tabData[current].length;
     const cur = classList[current]
+    const lastValue = len - 1 > 0 ? tabData[current][len - 1].code : ''
     const param = {
       sortCol: 'code',
       direction: 1,
-      lastValue: '',
+      lastValue: lastValue,
       classCode: cur.code,
       searchWord: '',
       elements: ["Edible", "Water"]
     }
     const list = await getFoodList(param);
-    dispatch(getListAction(list));
+
+    batch(() => {
+      dispatch(setTabDataAction(current, list))
+      if (isShowMore) {
+        dispatch(getMoreListAction(list));
+      } else {
+        dispatch(getListAction(list));
+      }
+    })
+    return list;
   }
 
-  const handleClickTab = async (current) => {
-    // dispatch(getListAction([]));
-    await setCurrent(current)
+  const handleClickTab = (current) => {
+    setCurrent(current)
+    set_loadText('上拉加载更多')
+    console.log(tabData, tabData[current], tabData[current].length > 0, "&&&&")
+    if (tabData[current].length > 0) {
+      return dispatch(getListAction(tabData[current]));
+    }
     getListData(current);
-    // const cur = classList[current]
-    // const param = {
-    //   sortCol: 'code',
-    //   direction: 1,
-    //   lastValue: '',
-    //   classCode: cur.code,
-    //   searchWord: '',
-    //   elements: ["Edible", "Water"]
-    // }
-    // const list = await getFoodList(param);
-    // dispatch(getListAction(list));
   }
 
   const handleIsShowModal = (status) => {
@@ -159,25 +164,15 @@ const Food = (props) => {
         if (loadText === '没有更多了~') {
           return;
         }
-        const len = foodList.length;
-        const cur = classList[current]
-        const param = {
-          sortCol: 'code',
-          direction: 1,
-          lastValue: foodList[len - 1].code,
-          classCode: cur.code,
-          searchWord: '',
-          elements: ["Edible", "Water"]
-        }
-        const list = await getFoodList(param);
-        dispatch(getMoreListAction(list));
+        getListData(current).then(res => {
+          console.log('停止上拉加载更多~')
+          setIsShowMore(false);
+          if (res.length === 0) {
+            return set_loadText('没有更多了~')
+          }
+          return set_loadText('上拉加载更多')
+        })
 
-        console.log('停止上拉加载更多~')
-        setIsShowMore(false);
-        if (list.length === 0) {
-          return set_loadText('没有更多了~')
-        }
-        return set_loadText('上拉加载更多')
       }
     })
   }
@@ -194,23 +189,19 @@ const Food = (props) => {
     const systemInfo = await getSystemInfo()
     setScrollHeight(systemInfo.windowHeight - 73)
     const [elementC, element, foodC] = await Promise.all([getElementClass(), getElement(), getFoodClass()])
-    console.log(elementC, element, foodC, '+++++')
-    const param = {
-      sortCol: 'code',
-      direction: 1,
-      lastValue: '',
-      classCode: 1,
-      searchWord: '',
-      elements: ["Edible", "Water"]
-    }
-    const list = await getFoodList(param)
+
     batch(() => {
       dispatch(getElementClassAction(elementC));
       dispatch(getElementAction(element));
       dispatch(getClassAction(foodC));
-      dispatch(getListAction(list));
     })
   }, [])
+
+  useEffect(() => {
+    if (classList.length > 0) {
+      getListData(current)
+    }
+  }, [classList])
 
   return (
     <View className={styles.index}>

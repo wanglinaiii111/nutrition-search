@@ -1,23 +1,32 @@
 import {
+  batch
+} from 'react-redux';
+import {
   GET_CLASS,
   GET_LIST,
   GET_ELEMENT_CLASS,
   GET_ELEMENT,
   GET_FOOD_INFO,
-  SET_ELEMENT_CLASS_STATUS
+  SET_ELEMENT_CLASS_STATUS,
+  SET_TAB_DATA
 } from '../constants'
 
 export const getClassAction = (data) => {
   return (dispatch) => {
-    const res = data.map(item => {
+    const arr = [];
+    const res = data.map((item, index) => {
+      arr[index] = [];
       return {
         ...item,
         title: item.name
       }
     })
-    dispatch({
-      type: GET_CLASS,
-      data: res
+    batch(() => {
+      dispatch(setTabDataAction(null, arr));
+      dispatch({
+        type: GET_CLASS,
+        data: res
+      })
     })
   }
 }
@@ -25,7 +34,15 @@ export const getClassAction = (data) => {
 export const getListAction = (data) => {
   return {
     type: GET_LIST,
-    data: data
+    data
+  }
+}
+
+export const setTabDataAction = (index, data) => {
+  return {
+    type: SET_TAB_DATA,
+    index,
+    data
   }
 }
 
