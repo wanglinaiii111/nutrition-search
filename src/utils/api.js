@@ -1,8 +1,9 @@
 import Taro from '@tarojs/taro'
 
 let domain = 'http://localhost:8800'
-domain = 'http://60.205.202.39'
-domain = 'http://192.168.137.1:8800'
+// domain = 'http://60.205.202.39'
+// domain = 'http://192.168.137.1:8800'
+domain = 'http://172.16.81.191:8800'
 
 //#### 获取食物分类
 export const getFoodClass = () => {

@@ -47,9 +47,7 @@ const Food = (props) => {
   const classList = useSelector(state => state.food.classList)
   const foodList = useSelector(state => state.food.foodList)
 
-  const handleClickTab = async (current) => {
-    // dispatch(getListAction([]));
-    setCurrent(current)
+  const getListData = async (current) => {
     const cur = classList[current]
     const param = {
       sortCol: 'code',
@@ -61,6 +59,23 @@ const Food = (props) => {
     }
     const list = await getFoodList(param);
     dispatch(getListAction(list));
+  }
+
+  const handleClickTab = async (current) => {
+    // dispatch(getListAction([]));
+    await setCurrent(current)
+    getListData(current);
+    // const cur = classList[current]
+    // const param = {
+    //   sortCol: 'code',
+    //   direction: 1,
+    //   lastValue: '',
+    //   classCode: cur.code,
+    //   searchWord: '',
+    //   elements: ["Edible", "Water"]
+    // }
+    // const list = await getFoodList(param);
+    // dispatch(getListAction(list));
   }
 
   const handleIsShowModal = (status) => {
@@ -167,9 +182,17 @@ const Food = (props) => {
     })
   }
 
+  const clickQuickNav = (current) => {
+    return () => {
+      setIsShowMenu(false);
+      setCurrent(current);
+      getListData(current);
+    }
+  }
+
   useEffect(async () => {
     const systemInfo = await getSystemInfo()
-    setScrollHeight(systemInfo.windowHeight - 35)
+    setScrollHeight(systemInfo.windowHeight - 73)
     const [elementC, element, foodC] = await Promise.all([getElementClass(), getElement(), getFoodClass()])
     console.log(elementC, element, foodC, '+++++')
     const param = {
@@ -188,10 +211,6 @@ const Food = (props) => {
       dispatch(getListAction(list));
     })
   }, [])
-
-  // useEffect(() => {
-  //   load()
-  // }, [isShowMore])
 
   return (
     <View className={styles.index}>
@@ -305,18 +324,13 @@ const Food = (props) => {
         <View className={styles.drawer}>
           <PanelTitle>导航</PanelTitle>
           <View className={styles.tagContainer}>
-            <View className={styles.tags}>
-              <Text>薯类、淀粉及制品</Text>
-            </View>
-            <View className={styles.tags}>
-              <Text>干豆类及制品</Text>
-            </View>
-            <View className={styles.tags}>
-              <Text>菌藻类</Text>
-            </View>
-            <View className={styles.tags}>
-              <Text>蔬菜类及制品</Text>
-            </View>
+            {
+              classList.map((item, index) => {
+                return <View className={styles.tags} onClick={clickQuickNav(index)}>
+                  <Text>{item.name}</Text>
+                </View>
+              })
+            }
           </View>
         </View>
       </AtDrawer>

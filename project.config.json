@@ -2,7 +2,7 @@
   "miniprogramRoot": "dist/",
   "projectname": "nutrition-search",
   "description": "食物营养含量查询",
-  "appid": "wx652127274fdcb9f5",
+  "appid": "wxe0be61e923bde3dc",
   "setting": {
     "urlCheck": false,
     "es6": false,
