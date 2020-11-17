@@ -185,9 +185,33 @@ const Food = (props) => {
     }
   }
 
+  const getSearchH = () => {
+    return new Promise(resolve => {
+      const query = Taro.createSelectorQuery()
+      query.select('.foodHeader').boundingClientRect(rec => {
+        resolve(rec)
+      }).exec();
+    })
+  }
+  const getTabH = () => {
+    return new Promise(resolve => {
+      const query = Taro.createSelectorQuery()
+      query.select('.menu').boundingClientRect(rec => {
+        resolve(rec)
+
+      }).exec();
+    })
+  }
   useEffect(async () => {
     const systemInfo = await getSystemInfo()
-    setScrollHeight(systemInfo.windowHeight - 73)
+    setTimeout(async () => {
+      const h1 = await getSearchH();
+      const h2 = await getTabH();
+      console.log(h1, h2, 'h1')
+      setScrollHeight(systemInfo.windowHeight - h1.height - h2.height)
+    }, 100)
+
+
     const [elementC, element, foodC] = await Promise.all([getElementClass(), getElement(), getFoodClass()])
 
     batch(() => {
@@ -205,7 +229,7 @@ const Food = (props) => {
 
   return (
     <View className={styles.index}>
-      <View className={styles.header}>
+      <View className={`${styles.header} foodHeader`}>
         <AtSearchBar
           className={`${styles.search} food-search`}
           value={searchVal}
@@ -217,7 +241,7 @@ const Food = (props) => {
         </View>
       </View>
 
-      <View className={styles.nav} onClick={handleIsShowMenu(true)}>
+      <View className={`${styles.nav} menu`} onClick={handleIsShowMenu(true)}>
         <AtIcon value='menu' size='20' color='#9a9a9a'></AtIcon>
       </View>
       <AtTabs
@@ -242,7 +266,7 @@ const Food = (props) => {
                     {
                       current === index &&
                       foodList.map((item) => {
-                        return <ListItem clickToDetail={clickToDetail(item.code)} data={item}></ListItem>
+                        return <ListItem clickToDetail={clickToDetail(item.code)} data={item} current={current}></ListItem>
                       })
                     }
 
