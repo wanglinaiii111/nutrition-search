@@ -14,8 +14,17 @@ import {
 export const getClassAction = (data) => {
   return (dispatch) => {
     const arr = [];
-    const res = data.map((item, index) => {
-      arr[index] = [];
+    const obj = {
+      code: "",
+      color: "#4470ed",
+      name: "全部",
+    }
+    const newData = [obj, ...data];
+    const res = newData.map((item, index) => {
+      arr[index] = {
+        condition: {},
+        data: []
+      };
       return {
         ...item,
         title: item.name

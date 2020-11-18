@@ -40,10 +40,18 @@ export default function counter(state = INITIAL_STATE, action) {
       }
       return {
         ...state,
-        tabData: {
-          ...state.tabData,
-          [action.index]: [...state.tabData[action.index], ...action.data]
-        }
+        tabData: state.tabData.map((item, index) => {
+          if (index === action.index) {
+            return {
+              condition: action.data.condition,
+              data: action.data.data
+            }
+          }
+          return {
+            condition: {},
+            data: []
+          }
+        }),
       }
       break;
     case GET_ELEMENT_CLASS:

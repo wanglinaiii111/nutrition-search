@@ -11,6 +11,8 @@ import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement, getFoodInfo } from '../../utils/api'
 import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction, setTabDataAction } from '../../actions/food'
 
+const _ = require("underscore");
+
 const checkboxOption = [{
   value: 'list1',
   label: 'iPhone X',
@@ -48,38 +50,55 @@ const Food = (props) => {
   const foodList = useSelector(state => state.food.foodList)
   const tabData = useSelector(state => state.food.tabData)
 
-  const getListData = async (current) => {
-    const len = tabData[current].length;
-    const cur = classList[current]
-    const lastValue = len - 1 > 0 ? tabData[current][len - 1].code : ''
+  const getListData = (current) => {
+    console.log(tabData, current, tabData[current])
+    const len = tabData[current]['data'].length;
+    const code = classList[current].code;
+    let lastValue = ''
+    if (tabData[current].condition !== null && len > 0) {
+      console.log(tabData[current], tabData[current]['data'])
+      lastValue = tabData[current]['data'][len - 1].code
+    }
     const param = {
       sortCol: 'code',
       direction: 1,
       lastValue: lastValue,
-      classCode: cur.code,
-      searchWord: '',
+      classCode: code,
+      searchWord: searchVal,
       elements: ["Edible", "Water"]
     }
-    const list = await getFoodList(param);
+    const isEqual = _.isEqual(param, tabData[current].condition);
+    let list = []
 
-    batch(() => {
-      dispatch(setTabDataAction(current, list))
+    batch(async () => {
+      if (isEqual) {
+        list = tabData[current].data;
+      } else {
+        list = await getFoodList(param);
+        const tabParams = {
+          condition: param,
+          data: [...tabData[current].data, ...list]
+        }
+        dispatch(setTabDataAction(current, tabParams))
+      }
+
       if (isShowMore) {
         dispatch(getMoreListAction(list));
       } else {
         dispatch(getListAction(list));
       }
+
+      setIsShowMore(false);
+      if (list.length === 0) {
+        return set_loadText('没有更多了~')
+      }
+      return set_loadText('上拉加载更多')
     })
-    return list;
   }
 
   const handleClickTab = (current) => {
     setCurrent(current)
     set_loadText('上拉加载更多')
-    console.log(tabData, tabData[current], tabData[current].length > 0, "&&&&")
-    if (tabData[current].length > 0) {
-      return dispatch(getListAction(tabData[current]));
-    }
     getListData(current);
   }
 
@@ -156,6 +175,7 @@ const Food = (props) => {
 
   const onActionClick = () => {
     console.log(searchVal)
+    dispatch(setTabDataAction(current, { ...tabData[current], condition: null, data: [] }))
   }
 
   const load = () => {
@@ -164,15 +184,8 @@ const Food = (props) => {
         if (loadText === '没有更多了~') {
           return;
         }
-        getListData(current).then(res => {
-          console.log('停止上拉加载更多~')
-          setIsShowMore(false);
-          if (res.length === 0) {
-            return set_loadText('没有更多了~')
-          }
-          return set_loadText('上拉加载更多')
-        })
-
+        getListData(current)
+        console.log('停止上拉加载更多~')
       }
     })
   }
@@ -211,7 +224,6 @@ const Food = (props) => {
       setScrollHeight(systemInfo.windowHeight - h1.height - h2.height)
     }, 100)
 
-
     const [elementC, element, foodC] = await Promise.all([getElementClass(), getElement(), getFoodClass()])
 
     batch(() => {
@@ -223,9 +235,15 @@ const Food = (props) => {
 
   useEffect(() => {
     if (classList.length > 0) {
-      getListData(current)
+      getListData(current);
     }
-  }, [classList])
+  }, [classList]);
+
+  useEffect(() => {
+    if (tabData.length > 0 && tabData[current]['condition'] === null) {
+      getListData(current);
+    }
+  }, [tabData]);
 
   return (
     <View className={styles.index}>
@@ -282,35 +300,6 @@ const Food = (props) => {
 
                 </ScrollView>
               </View>
-
-              {/* <ScrollView
-                scroll-y
-                style={{ height: `${scrollHeight}px` }}
-                enableBackToTop
-                onTouchMove={touchmove}
-                onTouchStart={touchStart}
-                onTouchEnd={touchEnd}
-              >
-
-                <View className={styles.tabs}>
-                  {
-                    current === index &&
-                    foodList.map((item) => {
-                      return <ListItem clickToDetail={clickToDetail} data={item}></ListItem>
-                    })
-                  }
-
-                </View>
-
-                <View className={styles.upDragBox} style={upDragStyle}>
-                  {
-                    isShowMore ?
-                      <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
-                      : <Text>{loadText}</Text>
-                  }
-                </View>
-
-              </ScrollView> */}
             </AtTabsPane>
           })
         }
