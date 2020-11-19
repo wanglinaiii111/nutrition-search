@@ -56,8 +56,11 @@ const Food = (props) => {
     const code = classList[current].code;
     let lastValue = ''
     if (tabData[current].condition !== null && len > 0) {
-      console.log(tabData[current], tabData[current]['data'])
-      lastValue = tabData[current]['data'][len - 1].code
+      if (isShowMore) {
+        lastValue = tabData[current]['data'][len - 1].code
+      } else {
+        lastValue = tabData[current]['condition'].lastValue
+      }
     }
     const param = {
       sortCol: 'code',
@@ -68,6 +71,8 @@ const Food = (props) => {
       elements: ["Edible", "Water"]
     }
     const isEqual = _.isEqual(param, tabData[current].condition);
+    console.log(param, tabData[current].condition)
+    console.log(isEqual, 'isEqual')
     let list = []
 
     batch(async () => {

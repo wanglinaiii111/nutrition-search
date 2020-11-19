@@ -48,8 +48,8 @@ export default function counter(state = INITIAL_STATE, action) {
             }
           }
           return {
-            condition: {},
-            data: []
+            condition: item.condition,
+            data: item.data
           }
         }),
       }
