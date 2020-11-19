@@ -17,6 +17,11 @@ export const getFoodClass = () => {
       },
       fail: function (e) {
         console.log(e)
+        Taro.showToast({
+          title: JSON.stringify(e.errMsg),
+          icon: 'none',
+          duration: 3000
+        })
         reject(e)
       }
     })
@@ -35,6 +40,7 @@ export const getFoodList = (data) => {
       },
       fail: function (e) {
         console.log(e)
+        getErrorMsg(e)
         reject(e)
       }
     })
@@ -52,6 +58,7 @@ export const getElementClass = () => {
       },
       fail: function (e) {
         console.log(e)
+        getErrorMsg(e)
         reject(e)
       }
     })
@@ -69,6 +76,7 @@ export const getElement = () => {
       },
       fail: function (e) {
         console.log(e)
+        getErrorMsg(e)
         reject(e)
       }
     })
@@ -87,8 +95,17 @@ export const getFoodInfo = (data) => {
       },
       fail: function (e) {
         console.log(e)
+        getErrorMsg(e)
         reject(e)
       }
     })
+  })
+}
+
+const getErrorMsg = (e) => {
+  return Taro.showToast({
+    title: JSON.stringify(e.errMsg),
+    icon: 'none',
+    duration: 3000
   })
 }

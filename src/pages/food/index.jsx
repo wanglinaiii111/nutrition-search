@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView, Text } from '@tarojs/components'
 import { getSystemInfo } from '../../utils/sdk'
-import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio, AtActivityIndicator, AtSearchBar, AtDrawer, AtTag } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio, AtActivityIndicator, AtSearchBar, AtDrawer, AtTag, AtButton } from 'taro-ui'
 import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
@@ -13,19 +13,6 @@ import { getClassAction, getListAction, getElementClassAction, getElementAction,
 
 const _ = require("underscore");
 
-const checkboxOption = [{
-  value: 'list1',
-  label: 'iPhone X',
-}, {
-  value: 'list2',
-  label: 'HUAWEI P20'
-}, {
-  value: 'list3',
-  label: 'OPPO Find X',
-}, {
-  value: 'list4',
-  label: 'vivo NEX',
-}]
 const typeOptions = [
   { label: '全部', value: 'all' },
   { label: '收藏', value: 'collect' }
@@ -37,7 +24,14 @@ const Food = (props) => {
   const [current, setCurrent] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
-  const [checkedList, setCheckedList] = useState([]);
+  const [checkedList, setCheckedList] = useState({
+    "Edible": true,
+    "Water": true,
+    "Energy": true,
+    "Protein": true,
+    "Fat": true,
+  });
+  const [saveCheckedList, set_saveCheckedList] = useState({});
   const [radioVal, setRadioVal] = useState('all');
   const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' });
   const [isShowMore, setIsShowMore] = useState(false);
@@ -49,11 +43,16 @@ const Food = (props) => {
   const classList = useSelector(state => state.food.classList)
   const foodList = useSelector(state => state.food.foodList)
   const tabData = useSelector(state => state.food.tabData)
+  const elementMap = useSelector(state => state.food.elementMap)
 
   const getListData = (current) => {
-    console.log(tabData, current, tabData[current])
     const len = tabData[current]['data'].length;
     const code = classList[current].code;
+    const ele = [];
+    Object.keys(checkedList).map(key => {
+      checkedList[key] && ele.push(key)
+    })
+    set_saveCheckedList(checkedList)
     let lastValue = ''
     if (tabData[current].condition !== null && len > 0) {
       if (isShowMore) {
@@ -68,11 +67,9 @@ const Food = (props) => {
       lastValue: lastValue,
       classCode: code,
       searchWord: searchVal,
-      elements: ["Edible", "Water"]
+      elements: ele
     }
     const isEqual = _.isEqual(param, tabData[current].condition);
-    console.log(param, tabData[current].condition)
-    console.log(isEqual, 'isEqual')
     let list = []
 
     batch(async () => {
@@ -115,9 +112,37 @@ const Food = (props) => {
     return () => setIsShowMenu(status)
   }
 
-  const handleChangeCheckBox = (val) => {
-    setCheckedList(val)
+  const handleChangeCheck = (item) => {
+    return () => {
+      if (checkedList[item.code]) {
+        return setCheckedList({ ...checkedList, [item.code]: false })
+      }
+      let len = 0;
+      Object.keys(checkedList).map(key => {
+        if (checkedList[key]) {
+          return len++
+        }
+      });
+      if (len === 5) {
+        return Taro.showToast({
+          title: '最多只能选择5个~',
+          icon: 'none',
+          duration: 3000
+        })
+      }
+      setCheckedList({ ...checkedList, [item.code]: true })
+    }
   }
+
+  const clickConfirm = () => {
+    getListData(current);
+    setIsOpened(false);
+  }
+
+  const clickReset = () => {
+    setCheckedList(saveCheckedList)
+  }
+
   const handleChangeRadioVal = (val) => {
     setRadioVal(val)
   }
@@ -309,7 +334,7 @@ const Food = (props) => {
           })
         }
       </AtTabs>
-      <AtFloatLayout isOpened={isOpened} title="筛选列表" onClose={handleIsShowModal(false)}>
+      <AtFloatLayout className='food-filter' isOpened={isOpened} title="筛选列表" onClose={handleIsShowModal(false)}>
         <PanelTitle>类型</PanelTitle>
         <AtRadio
           options={typeOptions}
@@ -317,15 +342,17 @@ const Food = (props) => {
           onClick={handleChangeRadioVal}
         />
         <PanelTitle>元素</PanelTitle>
-        <AtCheckbox
-          options={checkboxOption}
-          selectedList={checkedList}
-          onChange={handleChangeCheckBox}
-        />
+        {
+          elementMap.map(item => {
+            return <AtTag type='primary' active={checkedList[item.code] ? true : false} onClick={handleChangeCheck(item)}>{item.name}</AtTag>
+          })
+        }
+        <AtButton className={styles.confirm} type='primary' size='small' onClick={clickConfirm}>确定</AtButton>
+        <AtButton className={styles.reset} size='small' onClick={clickReset}>重置</AtButton>
       </AtFloatLayout>
       <AtDrawer
         show={isShowMenu}
-        width='250px'
+        width='77.35vw'
         right={true}
         mask
         onClose={handleIsShowMenu(false)}

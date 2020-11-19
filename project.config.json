@@ -4,7 +4,7 @@
   "description": "食物营养含量查询",
   "appid": "wxe0be61e923bde3dc",
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": false,
     "enhance": false,
     "postcss": false,
