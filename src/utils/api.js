@@ -1,10 +1,8 @@
 import Taro from '@tarojs/taro'
-
-let domain = 'http://localhost:8800'
-// domain = 'http://60.205.202.39'
-// domain = 'http://192.168.137.1:8800'
-domain = 'http://172.16.81.191:8800'
-domain = 'https://ipromiseyourlife.com'
+import {
+  CONFIG
+} from './config'
+const domain = CONFIG.domain
 
 //#### 获取食物分类
 export const getFoodClass = () => {
@@ -13,6 +11,7 @@ export const getFoodClass = () => {
       url: domain + '/foodClass/getClass',
       method: 'GET',
       success: function (res) {
+        console.log(res)
         resolve(res.data.list)
       },
       fail: function (e) {
@@ -107,5 +106,24 @@ const getErrorMsg = (e) => {
     title: JSON.stringify(e.errMsg),
     icon: 'none',
     duration: 3000
+  })
+}
+
+//#### 登录
+export const login = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/user/login',
+      method: 'post',
+      retryTimes: 0,
+      data,
+      success: function (res) {
+        resolve(res.data)
+      },
+      fail: function (e) {
+        getErrorMsg(e)
+        reject(e)
+      }
+    })
   })
 }

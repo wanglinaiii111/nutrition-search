@@ -1,31 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Provider } from 'react-redux'
-
 import configStore from './store'
 import './iconfont/iconfont.scss'
 import './app.scss'
-import { getUserInfo } from './utils/sdk'
+import Home from './home'
 
 const store = configStore()
 
-class App extends Component {
-  componentDidMount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
-  componentDidCatchError() { }
-
-  // 在 App 类中的 render() 函数没有实际作用
-  // 请勿修改此函数
-  render() {
-    return (
-      <Provider store={store}>
-        {this.props.children}
-      </Provider>
-    )
-  }
+function App(props) {
+  return (
+    <Provider store={store}>
+      <Home>
+        {props.children}
+      </Home>
+    </Provider>
+  )
 }
 
 export default App

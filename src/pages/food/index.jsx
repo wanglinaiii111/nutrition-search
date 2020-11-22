@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView, Text } from '@tarojs/components'
-import { getSystemInfo } from '../../utils/sdk'
-import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtCheckbox, AtRadio, AtActivityIndicator, AtSearchBar, AtDrawer, AtTag, AtButton } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtRadio, AtActivityIndicator, AtSearchBar, AtDrawer, AtTag, AtButton } from 'taro-ui'
 import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
 import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import Taro from '@tarojs/taro'
-import { getFoodClass, getFoodList, getElementClass, getElement, getFoodInfo } from '../../utils/api'
+import { getFoodClass, getFoodList, getElementClass, getElement } from '../../utils/api'
 import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction, setTabDataAction } from '../../actions/food'
 
 const _ = require("underscore");
@@ -18,11 +17,9 @@ const typeOptions = [
   { label: '收藏', value: 'collect' }
 ]
 
-
 const Food = (props) => {
   const dispatch = useDispatch();
   const [current, setCurrent] = useState(0);
-  const [scrollHeight, setScrollHeight] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
   const [checkedList, setCheckedList] = useState({
     "Edible": true,
@@ -33,12 +30,12 @@ const Food = (props) => {
   });
   const [saveCheckedList, set_saveCheckedList] = useState({});
   const [radioVal, setRadioVal] = useState('all');
-  const [upDragStyle, setUpDragStyle] = useState({ height: 50 + 'px' });
+  const [upDragStyle] = useState({ height: 50 + 'px' });
   const [isShowMore, setIsShowMore] = useState(false);
-  const [start_posi, set_start_posi] = useState({});
   const [searchVal, set_searchVal] = useState('');
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [loadText, set_loadText] = useState('上拉加载更多');
+  const [scrollHeight, setScrollHeight] = useState(0);
 
   const classList = useSelector(state => state.food.classList)
   const foodList = useSelector(state => state.food.foodList)
@@ -147,48 +144,8 @@ const Food = (props) => {
     setRadioVal(val)
   }
 
-  const touchStart = (e) => {
-    set_start_posi(e.touches[0])
-  }
-
-  const touchmove = (e) => {
-    if (loadText === '没有更多了~') {
-      return;
-    }
-    let move_posi = e.touches[0],
-      deviationX = 0.30, //左右偏移量(超过这个偏移量不执行下拉操作)
-      maxY = 50; //拉动的最大高度
-
-    let start_x = start_posi.clientX,
-      start_y = start_posi.clientY,
-      move_x = move_posi.clientX,
-      move_y = move_posi.clientY;
-
-    //得到偏移数值
-    let dev = Math.abs(move_x - start_x) / Math.abs(move_y - start_y);
-    if (dev < deviationX) {//当偏移数值大于设置的偏移数值时则不执行操作
-      let pY = Math.abs(move_y - start_y) / 3.5;//拖动倍率（使拖动的时候有粘滞的感觉--试了很多次 这个倍率刚好）
-
-      if (start_y - move_y > 0) {//上拉操作
-        if (pY >= maxY) {
-          pY = maxY
-        }
-        batch(() => {
-          if (!isShowMore) {
-            setIsShowMore(true)
-            setUpDragStyle({
-              height: pY < 30 ? 50 : pY + 'px'
-            })
-          }
-        })
-      }
-    }
-  }
-
-  const touchEnd = () => {
-    if (isShowMore) {
-      load()
-    }
+  const onScrolltolower = (e) => {
+    setIsShowMore(true)
   }
 
   const clickToDetail = (code) => {
@@ -228,34 +185,39 @@ const Food = (props) => {
     }
   }
 
-  const getSearchH = () => {
+  const getheaderH = () => {
     return new Promise(resolve => {
       const query = Taro.createSelectorQuery()
-      query.select('.foodHeader').boundingClientRect(rec => {
+      query.select('.food-myTabs').boundingClientRect(rec => {
         resolve(rec)
       }).exec();
     })
   }
+
   const getTabH = () => {
     return new Promise(resolve => {
       const query = Taro.createSelectorQuery()
-      query.select('.menu').boundingClientRect(rec => {
+      query.select('.food-myTabs .at-tabs__header').boundingClientRect(rec => {
         resolve(rec)
-
       }).exec();
     })
   }
+
+  useEffect(() => {
+    load()
+  }, [isShowMore])
+
   useEffect(async () => {
-    const systemInfo = await getSystemInfo()
     setTimeout(async () => {
-      const h1 = await getSearchH();
+      const h1 = await getheaderH();
       const h2 = await getTabH();
-      console.log(h1, h2, 'h1')
-      setScrollHeight(systemInfo.windowHeight - h1.height - h2.height)
+      setScrollHeight(h1.height - h2.height)
     }, 100)
-
+    Taro.showLoading({
+      title: '加载中',
+    })
     const [elementC, element, foodC] = await Promise.all([getElementClass(), getElement(), getFoodClass()])
-
+    Taro.hideLoading()
     batch(() => {
       dispatch(getElementClassAction(elementC));
       dispatch(getElementAction(element));
@@ -301,35 +263,32 @@ const Food = (props) => {
         {
           classList.map((item, index) => {
             return <AtTabsPane current={current} index={index}>
-              <View style={{ height: `${scrollHeight}px` }}>
-                <ScrollView
-                  scroll-y
-                  style={{ height: `${scrollHeight}px` }}
-                  onTouchMove={touchmove}
-                  onTouchStart={touchStart}
-                  onTouchEnd={touchEnd}
-                >
+              <ScrollView
+                scroll-y
+                onScrolltolower={onScrolltolower}
+                className={styles.scrollView}
+                style={{ height: `${scrollHeight}px` }}
+              >
 
-                  <View className={styles.tabs}>
-                    {
-                      current === index &&
-                      foodList.map((item) => {
-                        return <ListItem clickToDetail={clickToDetail(item.code)} data={item} current={current}></ListItem>
-                      })
-                    }
+                <View className={styles.tabs}>
+                  {
+                    current === index &&
+                    foodList.map((item) => {
+                      return <ListItem clickToDetail={clickToDetail(item.code)} data={item} current={current}></ListItem>
+                    })
+                  }
 
-                  </View>
+                </View>
 
-                  <View className={styles.upDragBox} style={upDragStyle}>
-                    {
-                      isShowMore ?
-                        <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
-                        : <Text>{loadText}</Text>
-                    }
-                  </View>
+                <View className={styles.upDragBox} style={upDragStyle}>
+                  {
+                    isShowMore && loadText === '上拉加载更多' ?
+                      <AtActivityIndicator content='加载中...' mode='center'></AtActivityIndicator>
+                      : <Text>{loadText}</Text>
+                  }
+                </View>
 
-                </ScrollView>
-              </View>
+              </ScrollView>
             </AtTabsPane>
           })
         }

@@ -1,7 +1,19 @@
 .index {
   width: 100%;
+  height: 100vh;
   background-color: #f1f1f1;
   position: relative;
+  display:flex;
+  flex-direction: column;
+ 
+}
+.con{
+  height: 90px;
+  width: 100vw;
+}
+.scrollView {
+  // height: 100%;
+  flex: 1;
 }
 
 .tabs {
@@ -33,7 +45,7 @@
   align-items: center;
   box-sizing: border-box;
   position: absolute;
-  top: 90px;
+  top: 85px;
   right: 0;
 }
 

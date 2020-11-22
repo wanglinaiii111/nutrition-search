@@ -1,3 +1,5 @@
+export const SET_USERID = 'USER/set-userId'
+
 export const GET_CLASS = 'FOOD/get-class'
 export const GET_LIST = 'FOOD/get-list'
 export const GET_MORE_LIST = 'FOOD/get-more-list'

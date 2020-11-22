@@ -19,3 +19,17 @@ export const getSystemInfo = () => {
     })
   })
 }
+export const taroLogin = () => {
+  return new Promise((resolve, reject) => {
+    Taro.login({
+      success(res) {
+        if (res.code) {
+          //发起网络请求
+          resolve(res)
+        } else {
+          reject(res.errMsg)
+        }
+      }
+    })
+  })
+}
