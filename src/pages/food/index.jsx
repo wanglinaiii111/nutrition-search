@@ -8,7 +8,7 @@ import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement } from '../../utils/api'
-import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction, setTabDataAction } from '../../actions/food'
+import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction, setTabDataAction,setCurrentAction } from '../../actions/food'
 
 const _ = require("underscore");
 
@@ -19,7 +19,6 @@ const typeOptions = [
 
 const Food = (props) => {
   const dispatch = useDispatch();
-  const [current, setCurrent] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
   const [checkedList, setCheckedList] = useState({
     "Edible": true,
@@ -41,6 +40,8 @@ const Food = (props) => {
   const foodList = useSelector(state => state.food.foodList)
   const tabData = useSelector(state => state.food.tabData)
   const elementMap = useSelector(state => state.food.elementMap)
+  const userId = useSelector(state => state.user.userId)
+  const current = useSelector(state => state.food.current)
 
   const getListData = (current) => {
     const len = tabData[current]['data'].length;
@@ -64,7 +65,8 @@ const Food = (props) => {
       lastValue: lastValue,
       classCode: code,
       searchWord: searchVal,
-      elements: ele
+      elements: ele,
+      userId: userId
     }
     const isEqual = _.isEqual(param, tabData[current].condition);
     let list = []
@@ -96,7 +98,7 @@ const Food = (props) => {
   }
 
   const handleClickTab = (current) => {
-    setCurrent(current)
+    dispatch(setCurrentAction(current))
     set_loadText('上拉加载更多')
     getListData(current);
   }
@@ -180,7 +182,7 @@ const Food = (props) => {
   const clickQuickNav = (current) => {
     return () => {
       setIsShowMenu(false);
-      setCurrent(current);
+      dispatch(setCurrentAction(current))
       getListData(current);
     }
   }
@@ -274,7 +276,7 @@ const Food = (props) => {
                   {
                     current === index &&
                     foodList.map((item) => {
-                      return <ListItem clickToDetail={clickToDetail(item.code)} data={item} current={current}></ListItem>
+                      return <ListItem clickToDetail={clickToDetail(item.code)} data={item}></ListItem>
                     })
                   }
 

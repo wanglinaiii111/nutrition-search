@@ -2,6 +2,9 @@ import Taro from '@tarojs/taro'
 import {
   CONFIG
 } from './config'
+import {
+  alert
+} from './util'
 const domain = CONFIG.domain
 
 //#### 获取食物分类
@@ -16,11 +19,7 @@ export const getFoodClass = () => {
       },
       fail: function (e) {
         console.log(e)
-        Taro.showToast({
-          title: JSON.stringify(e.errMsg),
-          icon: 'none',
-          duration: 3000
-        })
+        alert(e.errMsg)
         reject(e)
       }
     })
@@ -39,7 +38,7 @@ export const getFoodList = (data) => {
       },
       fail: function (e) {
         console.log(e)
-        getErrorMsg(e)
+        alert(e.errMsg)
         reject(e)
       }
     })
@@ -57,7 +56,7 @@ export const getElementClass = () => {
       },
       fail: function (e) {
         console.log(e)
-        getErrorMsg(e)
+        alert(e.errMsg)
         reject(e)
       }
     })
@@ -75,7 +74,7 @@ export const getElement = () => {
       },
       fail: function (e) {
         console.log(e)
-        getErrorMsg(e)
+        alert(e.errMsg)
         reject(e)
       }
     })
@@ -94,18 +93,10 @@ export const getFoodInfo = (data) => {
       },
       fail: function (e) {
         console.log(e)
-        getErrorMsg(e)
+        alert(e.errMsg)
         reject(e)
       }
     })
-  })
-}
-
-const getErrorMsg = (e) => {
-  return Taro.showToast({
-    title: JSON.stringify(e.errMsg),
-    icon: 'none',
-    duration: 3000
   })
 }
 
@@ -121,7 +112,47 @@ export const login = (data) => {
         resolve(res.data)
       },
       fail: function (e) {
-        getErrorMsg(e)
+        alert(e.errMsg)
+        reject(e)
+      }
+    })
+  })
+}
+
+//#### 收藏
+export const setCollectFood = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/food/collectFood',
+      method: 'GET',
+      data,
+      success: function (res) {
+        alert('收藏成功')
+        resolve(res)
+      },
+      fail: function (e) {
+        console.log(e)
+        alert(e.errMsg)
+        reject(e)
+      }
+    })
+  })
+}
+
+//#### 取消收藏
+export const setUnCollectFood = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/food/unCollectFood',
+      method: 'GET',
+      data,
+      success: function (res) {
+        alert('取消收藏')
+        resolve(res)
+      },
+      fail: function (e) {
+        console.log(e)
+        alert(e.errMsg)
         reject(e)
       }
     })

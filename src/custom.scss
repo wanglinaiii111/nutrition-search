@@ -12,3 +12,25 @@
 .food-filter .at-tag {
   margin: 0 10px 10px 0;
 }
+
+.classify-detail .at-card__content {
+  padding: 0;
+}
+
+.classify-detail .at-accordion__content {
+  padding: 0px 20px;
+  box-sizing: border-box;
+}
+
+.classify-detail .at-list__item .item-extra__info {
+  padding-right: 0px;
+}
+
+.classify-detail .at-list__item::after {
+  left: 18px;
+  right: 18px;
+}
+
+.classify-detail .at-card__header {
+  display: none;
+}

@@ -8,8 +8,26 @@ import {
   GET_ELEMENT,
   GET_FOOD_INFO,
   SET_ELEMENT_CLASS_STATUS,
-  SET_TAB_DATA
+  SET_TAB_DATA,
+  SET_USER_COLLECT_STATUS,
+  SET_CURRENT,
+  SET_FOOD_COOD
 } from '../constants'
+
+export const setCurrentAction = (current) => {
+  return {
+    type: SET_CURRENT,
+    current
+  }
+}
+
+export const setFoodCodeAction = (code, status) => {
+  return {
+    type: SET_FOOD_COOD,
+    code,
+    status
+  }
+}
 
 export const getClassAction = (data) => {
   return (dispatch) => {
@@ -89,5 +107,13 @@ export const getFoodInfoAction = (data) => {
   return {
     type: GET_FOOD_INFO,
     data
+  }
+}
+
+export const setUserCollectStatusAction = (status, code) => {
+  return {
+    type: SET_USER_COLLECT_STATUS,
+    status,
+    code
   }
 }
