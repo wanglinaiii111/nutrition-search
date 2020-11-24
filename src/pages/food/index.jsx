@@ -12,6 +12,7 @@ import {
   getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction,
   setTabDataAction, setCurrentAction, setFoodCodeAction
 } from '../../actions/food'
+import { alert } from '../../utils/util'
 
 const _ = require("underscore");
 
@@ -124,24 +125,27 @@ const Food = (props) => {
       if (checkedList[item.code]) {
         return setCheckedList({ ...checkedList, [item.code]: false })
       }
-      let len = 0;
-      Object.keys(checkedList).map(key => {
-        if (checkedList[key]) {
-          return len++
-        }
-      });
+      const len = getTagsLength();
       if (len === 5) {
-        return Taro.showToast({
-          title: '最多只能选择5个~',
-          icon: 'none',
-          duration: 3000
-        })
+        return alert('最多选择5个标签~')
       }
       setCheckedList({ ...checkedList, [item.code]: true })
     }
   }
+  
+  const getTagsLength = () => {
+    let len = 0;
+    Object.keys(checkedList).map(key => {
+      checkedList[key] && len++
+    });
+    return len;
+  }
 
   const clickConfirm = () => {
+    const len = getTagsLength();
+    if (len === 0) {
+      alert('至少选择1个标签~')
+    }
     getListData(current);
     setIsOpened(false);
   }
