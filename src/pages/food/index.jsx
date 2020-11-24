@@ -8,7 +8,10 @@ import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement } from '../../utils/api'
-import { getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction, setTabDataAction,setCurrentAction } from '../../actions/food'
+import {
+  getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction,
+  setTabDataAction, setCurrentAction, setFoodCodeAction
+} from '../../actions/food'
 
 const _ = require("underscore");
 
@@ -80,6 +83,11 @@ const Food = (props) => {
           condition: param,
           data: [...tabData[current].data, ...list]
         }
+        list.map(item => {
+          if (+item.isCollect === 1) {
+            dispatch(setFoodCodeAction(item.code, true))
+          }
+        })
         dispatch(setTabDataAction(current, tabParams))
       }
 

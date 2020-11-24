@@ -6,7 +6,6 @@ import {
   GET_FOOD_INFO,
   SET_ELEMENT_CLASS_STATUS,
   SET_TAB_DATA,
-  SET_USER_COLLECT_STATUS,
   SET_CURRENT,
   SET_FOOD_COOD
 } from '../constants'
@@ -102,42 +101,6 @@ export default function counter(state = INITIAL_STATE, action) {
         foodInfo: action.data
       }
       break;
-    case SET_USER_COLLECT_STATUS:
-      return {
-        ...state,
-        foodInfo: {
-            ...state.foodInfo,
-            isCollect: action.code === state.foodInfo.code ? action.status : state.foodInfo.isCollect
-          },
-          foodList: state.foodList.map(item => {
-            if (item.code === action.code) {
-              return {
-                ...item,
-                isCollect: action.status
-              }
-            }
-            return item
-          }),
-          tabData: state.tabData.map((item, index) => {
-            if (index === state.current) {
-              return {
-                ...item,
-                data: item.data.map(d => {
-                  if (d.code === action.code) {
-                    return {
-                      ...d,
-                      isCollect: action.status
-                    }
-                  }
-                  return d
-                })
-              }
-            }
-            return item
-          })
-      }
-      break;
-
     case SET_FOOD_COOD:
       return {
         ...state,

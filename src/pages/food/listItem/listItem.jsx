@@ -4,7 +4,8 @@ import styles from './listItem.module.scss'
 import { batch, useDispatch, useSelector } from 'react-redux';
 import { AtIcon } from 'taro-ui'
 import { setCollectFood, setUnCollectFood } from '../../../utils/api'
-import { setUserCollectStatusAction, setFoodCodeAction } from '../../../actions/food'
+import { setFoodCodeAction } from '../../../actions/food'
+import { alert } from '../../../utils/util'
 
 const ListItem = React.memo((props) => {
   const { data, clickToDetail } = props;
@@ -24,11 +25,14 @@ const ListItem = React.memo((props) => {
       userId: userId,
       code: data.code
     }
+    if (!userId) {
+      return alert('请登录账号后进行收藏操作')
+    }
     if (+data.isCollect === 1 || foodCodes[data.code]) {
       setUnCollectFood(param).then(() => {
         batch(() => {
-          dispatch(setUserCollectStatusAction(0, data.code))
           dispatch(setFoodCodeAction(data.code, false))
+
         })
 
       })
@@ -36,13 +40,11 @@ const ListItem = React.memo((props) => {
     }
     setCollectFood(param).then(() => {
       batch(() => {
-        dispatch(setUserCollectStatusAction(1, data.code))
         dispatch(setFoodCodeAction(data.code, true))
       })
 
     })
   }
-  console.log(foodCodes);
 
   return <View className={styles.container}>
     <View className={styles.content}>
@@ -51,7 +53,7 @@ const ListItem = React.memo((props) => {
         <View className={styles.name_after} style={{ backgroundColor: classList[current].color + '1A' }}></View>
       </View>
       <View style={{ zIndex: 100 }} onClick={clickCollect}>
-        <AtIcon prefixClass='iconfont' value='shoucang' size='22' color={+data.isCollect === 1 || foodCodes[data.code] ? '#44b9ed' : '#615f5f'}
+        <AtIcon prefixClass='iconfont' value='shoucang' size='22' color={foodCodes[data.code] ? '#44b9ed' : '#615f5f'}
         ></AtIcon>
       </View>
 

@@ -4,7 +4,7 @@ import styles from './index.module.scss'
 import '../../custom.scss'
 import { AtCard, AtList, AtListItem, AtAccordion, AtIcon } from 'taro-ui'
 import { getFoodInfo, setCollectFood, setUnCollectFood } from '../../utils/api'
-import { getFoodInfoAction, setEleClassStatusAction, setUserCollectStatusAction,setFoodCodeAction } from '../../actions/food'
+import { getFoodInfoAction, setEleClassStatusAction, setFoodCodeAction } from '../../actions/food'
 import { useDispatch, useSelector } from 'react-redux';
 
 const Detail = (props) => {
@@ -15,6 +15,7 @@ const Detail = (props) => {
   const classList = useSelector(state => state.food.classList)
   const [parentClass, set_parentClass] = useState({})
   const userId = useSelector(state => state.user.userId)
+  const foodCodes = useSelector(state => state.food.foodCodes)
 
   const handleClick = (index, status) => {
     dispatch(setEleClassStatusAction(index, status))
@@ -32,15 +33,16 @@ const Detail = (props) => {
       userId: userId,
       code: foodInfo.code
     }
+    if (!userId) {
+      return alert('请登录账号后进行收藏操作')
+    }
     if (+foodInfo.isCollect === 1) {
       setUnCollectFood(param).then(() => {
-        dispatch(setUserCollectStatusAction(0, foodInfo.code))
-        dispatch(setFoodCodeAction(foodInfo.code, true))
+        dispatch(setFoodCodeAction(foodInfo.code, false))
       })
       return;
     }
     setCollectFood(param).then(() => {
-      dispatch(setUserCollectStatusAction(1, foodInfo.code))
       dispatch(setFoodCodeAction(foodInfo.code, true))
     })
   }
@@ -75,7 +77,7 @@ const Detail = (props) => {
             <View className={styles.icon}></View>
             营养成分（每100克）
           </View>
-          <AtIcon prefixClass='iconfont' value='shoucang' size='22' color={+foodInfo.isCollect === 1 ? '#44b9ed' : '#615f5f'} onClick={clickCollect}></AtIcon>
+          <AtIcon prefixClass='iconfont' value='shoucang' size='22' color={foodCodes[foodInfo.code] ? '#44b9ed' : '#615f5f'} onClick={clickCollect}></AtIcon>
         </View>
       </View>
       {

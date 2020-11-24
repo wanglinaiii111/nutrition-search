@@ -9,7 +9,6 @@ import {
   GET_FOOD_INFO,
   SET_ELEMENT_CLASS_STATUS,
   SET_TAB_DATA,
-  SET_USER_COLLECT_STATUS,
   SET_CURRENT,
   SET_FOOD_COOD
 } from '../constants'
@@ -107,13 +106,5 @@ export const getFoodInfoAction = (data) => {
   return {
     type: GET_FOOD_INFO,
     data
-  }
-}
-
-export const setUserCollectStatusAction = (status, code) => {
-  return {
-    type: SET_USER_COLLECT_STATUS,
-    status,
-    code
   }
 }
