@@ -18,16 +18,16 @@ export default {
     selectedColor: "#44b9ed",
     backgroundColor: "#ffffff",
     borderStyle: "black",
-    list: [ {
+    list: [{
       pagePath: "pages/food/index",
       text: "食材",
       iconPath: "./image/food1.png",
       selectedIconPath: "./image/food2.png"
-    },{
+    }, {
       pagePath: "pages/index/index",
       text: "工具",
-      iconPath: "./image/new1.png",
-      selectedIconPath: "./image/new2.png"
+      iconPath: "./image/vs1.png",
+      selectedIconPath: "./image/vs2.png"
     }, {
       pagePath: "pages/personal-center/index",
       text: "个人中心",

@@ -13,24 +13,14 @@ import {
   setTabDataAction, setCurrentAction, setFoodCodeAction
 } from '../../actions/food'
 import { alert } from '../../utils/util'
+import { typeOptions, initialCheckedList } from './config'
 
 const _ = require("underscore");
-
-const typeOptions = [
-  { label: '全部', value: 'all' },
-  { label: '收藏', value: 'collect' }
-]
 
 const Food = (props) => {
   const dispatch = useDispatch();
   const [isOpened, setIsOpened] = useState(false);
-  const [checkedList, setCheckedList] = useState({
-    "Edible": true,
-    "Water": true,
-    "Energy": true,
-    "Protein": true,
-    "Fat": true,
-  });
+  const [checkedList, setCheckedList] = useState(initialCheckedList);
   const [saveCheckedList, set_saveCheckedList] = useState({});
   const [radioVal, setRadioVal] = useState('all');
   const [upDragStyle] = useState({ height: 50 + 'px' });
@@ -39,6 +29,8 @@ const Food = (props) => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [loadText, set_loadText] = useState('上拉加载更多');
   const [scrollHeight, setScrollHeight] = useState(0);
+  const [sortCode, set_sortCode] = useState('code');
+  const [sortDirection, set_sortDirection] = useState(1);
 
   const classList = useSelector(state => state.food.classList)
   const foodList = useSelector(state => state.food.foodList)
@@ -52,7 +44,7 @@ const Food = (props) => {
     const code = classList[current].code;
     const ele = [];
     Object.keys(checkedList).map(key => {
-      checkedList[key] && ele.push(key)
+      checkedList[key]['status'] && ele.push(key)
     })
     set_saveCheckedList(checkedList)
     let lastValue = ''
@@ -64,8 +56,8 @@ const Food = (props) => {
       }
     }
     const param = {
-      sortCol: 'code',
-      direction: 1,
+      sortCol: sortCode,
+      direction: sortDirection,
       lastValue: lastValue,
       classCode: code,
       searchWord: searchVal,
@@ -122,21 +114,24 @@ const Food = (props) => {
 
   const handleChangeCheck = (item) => {
     return () => {
-      if (checkedList[item.code]) {
-        return setCheckedList({ ...checkedList, [item.code]: false })
+      if (checkedList[item.code] && checkedList[item.code]['status']) {
+        if (sortCode === item.code) {
+          set_sortCode('code')
+        }
+        return setCheckedList({ ...checkedList, [item.code]: { ...checkedList[item.code], status: false } })
       }
       const len = getTagsLength();
       if (len === 5) {
         return alert('最多选择5个标签~')
       }
-      setCheckedList({ ...checkedList, [item.code]: true })
+      return setCheckedList({ ...checkedList, [item.code]: { ...checkedList[item.code], status: true, name: item.name } })
     }
   }
-  
+
   const getTagsLength = () => {
     let len = 0;
     Object.keys(checkedList).map(key => {
-      checkedList[key] && len++
+      checkedList[key]['status'] && len++
     });
     return len;
   }
@@ -308,16 +303,29 @@ const Food = (props) => {
         }
       </AtTabs>
       <AtFloatLayout className='food-filter' isOpened={isOpened} title="筛选列表" onClose={handleIsShowModal(false)}>
-        <PanelTitle>类型</PanelTitle>
+        <PanelTitle>数据类型</PanelTitle>
         <AtRadio
           options={typeOptions}
           value={radioVal}
           onClick={handleChangeRadioVal}
         />
-        <PanelTitle>元素</PanelTitle>
+        <PanelTitle>展示元素</PanelTitle>
         {
           elementMap.map(item => {
-            return <AtTag type='primary' active={checkedList[item.code] ? true : false} onClick={handleChangeCheck(item)}>{item.name}</AtTag>
+            return <AtTag type='primary' active={checkedList[item.code] && checkedList[item.code]['status'] ? true : false}
+              onClick={handleChangeCheck(item)}>{item.name}</AtTag>
+          })
+        }
+        <PanelTitle>排序类型</PanelTitle>
+        <AtTag type='primary' active={sortDirection === 1 ? true : false} onClick={() => set_sortDirection(1)}>升序</AtTag>
+        <AtTag type='primary' active={sortDirection === -1 ? true : false} onClick={() => set_sortDirection(-1)}>倒序</AtTag>
+        <PanelTitle>排序字段</PanelTitle>
+        <AtTag type='primary' active={sortCode === 'code' || !checkedList[sortCode]['status'] ? true : false} onClick={() => set_sortCode('code')}>不限</AtTag>
+        {
+          Object.keys(checkedList).map(key => {
+            if (checkedList[key]['status']) {
+              return <AtTag type='primary' active={sortCode === key ? true : false} onClick={() => set_sortCode(key)}>{checkedList[key]['name']}</AtTag>
+            }
           })
         }
         <AtButton className={styles.confirm} type='primary' size='small' onClick={clickConfirm}>确定</AtButton>
