@@ -320,7 +320,7 @@ const Food = (props) => {
         <AtTag type='primary' active={sortDirection === 1 ? true : false} onClick={() => set_sortDirection(1)}>升序</AtTag>
         <AtTag type='primary' active={sortDirection === -1 ? true : false} onClick={() => set_sortDirection(-1)}>倒序</AtTag>
         <PanelTitle>排序字段</PanelTitle>
-        <AtTag type='primary' active={sortCode === 'code' || !checkedList[sortCode]['status'] ? true : false} onClick={() => set_sortCode('code')}>不限</AtTag>
+        <AtTag type='primary' active={sortCode === 'code' || !checkedList[sortCode]['status'] ? true : false} onClick={() => set_sortCode('code')}>默认</AtTag>
         {
           Object.keys(checkedList).map(key => {
             if (checkedList[key]['status']) {

@@ -5,6 +5,24 @@
   background-color: #ffffff;
   padding: 20px 10px;
   box-sizing: border-box;
+  position: relative;
+}
+
+.collect {
+  width: 0;
+  height: 0;
+  border-top: 80px solid #615f5f;
+  border-left: 80px solid transparent;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  .collectIcon{
+    position: absolute;
+    top: 0;
+    right: 28px;
+    margin-top: -74px;
+  }
 }
 
 .content {
