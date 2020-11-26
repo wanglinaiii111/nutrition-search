@@ -4,7 +4,7 @@
   "description": "食物营养含量查询",
   "appid": "wxe0be61e923bde3dc",
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": false,
     "enhance": false,
     "postcss": false,
@@ -62,6 +62,17 @@
           "name": "pages/classifyDetail/index",
           "pathName": "pages/classifyDetail/index",
           "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/personal-center/index",
+          "pathName": "pages/personal-center/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/compare/index",
+          "pathName": "pages/compare/index",
           "scene": null
         }
       ]

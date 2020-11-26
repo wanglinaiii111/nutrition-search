@@ -147,6 +147,8 @@ const Food = (props) => {
 
   const clickReset = () => {
     setCheckedList(saveCheckedList)
+    set_sortCode('code')
+    set_sortDirection(1)
   }
 
   const handleChangeRadioVal = (val) => {

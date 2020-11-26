@@ -1,0 +1,55 @@
+.tools {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 50px 20px 20px;
+
+  button {
+    margin-right: 10px;
+  }
+}
+
+.drawer {
+  background-color: #FFF;
+  position: relative;
+  margin-left: 20px;
+}
+
+.drawerItem {
+  padding: 24px 24px;
+  box-sizing: border-box;
+  color: #333;
+  font-size: 32px;
+  line-height: 1.5;
+  transition: background-color 0.3s;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .thumb {
+    background-color: bisque;
+    margin-right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+  }
+
+  .content {
+    flex: 1;
+    overflow: hidden;
+    margin-right: 40px;
+  }
+}
+
+.drawerItem::after {
+  content: '';
+  position: absolute;
+  transform-origin: center;
+  box-sizing: border-box;
+  pointer-events: none;
+  top: auto;
+  left: 24px;
+  right: 0;
+  bottom: 0;
+  transform: scaleY(0.5);
+  border-bottom: 1PX solid #d6e4ef;
+}

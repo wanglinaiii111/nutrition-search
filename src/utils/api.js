@@ -158,3 +158,22 @@ export const setUnCollectFood = (data) => {
     })
   })
 }
+
+//#### 根据code获取该类别的所有食材
+export const getFoodAllList = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/food/getfoodAllList',
+      method: 'GET',
+      data,
+      success: function (res) {
+        resolve(res.data.list)
+      },
+      fail: function (e) {
+        console.log(e)
+        alert(e.errMsg)
+        reject(e)
+      }
+    })
+  })
+}

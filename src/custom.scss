@@ -34,3 +34,25 @@
 .classify-detail .at-card__header {
   display: none;
 }
+
+.personCenter-container .at-list__item:nth-last-child(1)::after {
+  border-bottom-width: 0;
+}
+
+.filterFood .at-tabs--vertical .at-tabs__item {
+  justify-content: flex-start;
+}
+
+.filterFood .at-tabs--vertical .at-tabs__header {
+  width: 178px;
+  overflow: hidden;
+  white-space: pre-line;
+}
+
+.filterFood .at-list__item {
+  width: 570px;
+}
+
+.filterFood .at-list__item .item-content__info-title {
+  white-space: inherit;
+}

@@ -7,7 +7,10 @@ import {
   SET_ELEMENT_CLASS_STATUS,
   SET_TAB_DATA,
   SET_CURRENT,
-  SET_FOOD_COOD
+  SET_FOOD_COOD,
+  GET_FOOD_ALL_LIST,
+  SET_SELECTED_FOOD,
+  DELETE_SELECTED_FOOD
 } from '../constants'
 
 const INITIAL_STATE = {
@@ -19,6 +22,8 @@ const INITIAL_STATE = {
   tabData: [],
   current: 0,
   foodCodes: {},
+  foodAllList: [],
+  selectedFood: {},
 }
 
 export default function counter(state = INITIAL_STATE, action) {
@@ -61,6 +66,23 @@ export default function counter(state = INITIAL_STATE, action) {
             condition: item.condition,
             data: item.data
           }
+        }),
+      }
+      break;
+    case GET_FOOD_ALL_LIST:
+      if (action.index === null) {
+        return {
+          ...state,
+          foodAllList: action.data
+        }
+      }
+      return {
+        ...state,
+        foodAllList: state.foodAllList.map((item, index) => {
+          if (index === action.index) {
+            return action.data
+          }
+          return item
         }),
       }
       break;
@@ -107,6 +129,25 @@ export default function counter(state = INITIAL_STATE, action) {
         foodCodes: {
           ...state.foodCodes,
           [action.code]: action.status
+        }
+      }
+      break;
+    case SET_SELECTED_FOOD:
+      return {
+        ...state,
+        selectedFood: {
+          ...state.selectedFood,
+          [action.data.code]: action.data
+        }
+      }
+      break;
+    case DELETE_SELECTED_FOOD:
+      const food = state.selectedFood;
+      delete food[action.code]
+      return {
+        ...state,
+        selectedFood: {
+          ...food
         }
       }
       break;

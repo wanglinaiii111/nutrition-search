@@ -10,7 +10,10 @@ import {
   SET_ELEMENT_CLASS_STATUS,
   SET_TAB_DATA,
   SET_CURRENT,
-  SET_FOOD_COOD
+  SET_FOOD_COOD,
+  GET_FOOD_ALL_LIST,
+  SET_SELECTED_FOOD,
+  DELETE_SELECTED_FOOD
 } from '../constants'
 
 export const setCurrentAction = (current) => {
@@ -28,6 +31,20 @@ export const setFoodCodeAction = (code, status) => {
   }
 }
 
+export const setSelectedFoodAction = (data) => {
+  return {
+    type: SET_SELECTED_FOOD,
+    data
+  }
+}
+
+export const deleteSelectedFoodAction = (code) => {
+  return {
+    type: DELETE_SELECTED_FOOD,
+    code
+  }
+}
+
 export const getClassAction = (data) => {
   return (dispatch) => {
     const arr = [];
@@ -36,12 +53,14 @@ export const getClassAction = (data) => {
       color: "#4470ed",
       name: "全部",
     }
+    const list = []
     const newData = [obj, ...data];
     const res = newData.map((item, index) => {
       arr[index] = {
         condition: {},
         data: []
       };
+      list[index] = [];
       return {
         ...item,
         title: item.name
@@ -49,6 +68,7 @@ export const getClassAction = (data) => {
     })
     batch(() => {
       dispatch(setTabDataAction(null, arr));
+      dispatch(setFoodAllListAction(null, list))
       dispatch({
         type: GET_CLASS,
         data: res
@@ -67,6 +87,14 @@ export const getListAction = (data) => {
 export const setTabDataAction = (index, data) => {
   return {
     type: SET_TAB_DATA,
+    index,
+    data
+  }
+}
+
+export const setFoodAllListAction = (index, data) => {
+  return {
+    type: GET_FOOD_ALL_LIST,
     index,
     data
   }

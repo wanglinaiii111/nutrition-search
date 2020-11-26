@@ -1,29 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { View, Image, Text } from '@tarojs/components'
-// import { getUserInfo } from '../../utils/sdk'
+import React from 'react'
+import Taro from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { AtList, AtListItem } from "taro-ui"
+import compare from '../../image/center/compare.png'
 
 import styles from './index.module.scss'
 
 const Center = (props) => {
-  // const [userInfo, setUserInfo] = useState(null)
-  // useEffect(async () => {
-  //   const user = await getUserInfo();
-  //   setUserInfo(user);
-  // }, [])
+
+  const clickToDetail = (type) => {
+    return () => {
+      if (type === 'compare') {
+        Taro.navigateTo({
+          url: '../compare/index'
+        })
+        return;
+      }
+    }
+  }
+
   return (
     <View className={styles.index}>
       <View className={styles.topBg}>
-        <open-data className={styles.avatar} type="userAvatarUrl"></open-data>
-        <open-data className={styles.nickName} type="userNickName"></open-data>
-        {/* <Image
-          className={styles.avatar}
-          src={userInfo && userInfo.avatarUrl}
-        />
-        <Text className={styles.nickName}>{userInfo && userInfo.nickName}</Text> */}
+        <view className={styles.userAvatar}>
+          <open-data type='userAvatarUrl'></open-data>
+        </view>
+        <view className={styles.userName}>
+          <open-data type='userNickName'></open-data>
+        </view>
       </View>
-      <View className={styles.container}>
-        123
-      </View>
+      <AtList hasBorder={false} className={`${styles.container} personCenter-container`}>
+        <AtListItem title='对比工具' arrow='right' thumb={compare} onClick={clickToDetail('compare')} />
+      </AtList>
     </View>
   )
 }
