@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Taro from '@tarojs/taro'
-import { View, Button, CoverImage } from '@tarojs/components'
-import { AtBadge, AtButton, AtDrawer, AtIcon } from 'taro-ui'
+import { View, CoverImage } from '@tarojs/components'
+import { AtBadge, AtButton, AtDrawer, AtIcon, AtSearchBar } from 'taro-ui'
 import FilterFood from '../filter-food/index'
 import styles from './index.module.scss'
 import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import { setSelectedFoodAction, deleteSelectedFoodAction } from '../../actions/food'
 import { alert } from '../../utils/util'
+import { CONFIG } from '../../utils/config'
+
+const domain = CONFIG.domain
 
 const Compare = (props) => {
   const dispatch = useDispatch()
-  const [showFilter, set_showFilter] = useState(true)
+  const [showFilter, set_showFilter] = useState(false)
   const [showListModal, set_showListModal] = useState(false)
   const [badgeVal, set_badgeVal] = useState(0)
   const [classListMap, set_classListMap] = useState({})
@@ -21,7 +24,8 @@ const Compare = (props) => {
   const handleClickadd = (item) => {
     return () => {
       if (selectedFood[item.code]) {
-        return alert('该食材已在对比列表中~')
+        handleDelete(item.code)
+        return;
       }
       dispatch(setSelectedFoodAction(item))
       alert('添加成功')
@@ -29,10 +33,8 @@ const Compare = (props) => {
   }
 
   const handleDelete = (code) => {
-    return () => {
-      dispatch(deleteSelectedFoodAction(code))
-      alert('删除成功')
-    }
+    dispatch(deleteSelectedFoodAction(code))
+    alert('删除成功')
   }
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const Compare = (props) => {
   }, [])
 
   useEffect(() => {
-    const len = Object.keys(selectedFood).length
+    const len = Object.keys(selectedFood).length || 0;
     set_badgeVal(len)
     Taro.setStorage({
       key: "selectedFood",
@@ -63,19 +65,24 @@ const Compare = (props) => {
     set_classListMap(obj)
   }, [classList])
 
-  return <View>
+  return <View className={styles.compare}>
     <View className={styles.tools}>
-      <View>
-        <Button size='mini' onClick={() => set_showFilter(true)}>筛选食材</Button>
-        <Button size='mini' onClick={() => set_showFilter(false)}>确定</Button>
-      </View>
-      <AtBadge value={badgeVal} maxValue={99}>
-        <AtButton size='small' onClick={() => set_showListModal(true)}>已选食材</AtButton>
-      </AtBadge>
+        <View className={styles.filter} onClick={() => set_showFilter(true)}>
+          <AtButton type={showFilter && 'primary'} size='small'>筛选食材</AtButton>
+        </View>
+        <View className={styles.filter}>
+          <AtButton type={!showFilter && 'primary'} size='small' onClick={() => set_showFilter(false)}>生成报表</AtButton>
+        </View>
+        <AtBadge value={badgeVal} maxValue={99}>
+          <AtButton size='small' onClick={() => set_showListModal(true)}>已选食材</AtButton>
+        </AtBadge>
     </View>
+    <View className={`${styles.filterContainer} filterContainer`}>
     {
-      showFilter && <FilterFood handleClickadd={handleClickadd}></FilterFood>
+      showFilter && <FilterFood checkedList={selectedFood} handleClickadd={handleClickadd}></FilterFood>
     }
+    </View>
+    
     <AtDrawer
       show={showListModal}
       onClose={() => set_showListModal(false)}
@@ -87,11 +94,14 @@ const Compare = (props) => {
         {
           Object.keys(selectedFood).map(key => {
             return <View className={styles.drawerItem}>
-              <View className={styles.thumb} style={{ backgroundColor: `${classListMap[selectedFood[key]['classCode']] && classListMap[selectedFood[key]['classCode']]['color']}` }}>
-                <CoverImage className={styles.logo} src={`../../image/class/${selectedFood[key]['classCode']}.png`} />
+              <View className={styles.thumb} style={{
+                backgroundColor: `${classListMap[selectedFood[key]['classCode']] &&
+                  classListMap[selectedFood[key]['classCode']]['color']}`
+              }}>
+                <CoverImage src={`${domain}/images/class/${selectedFood[key]['classCode']}.png`} />
               </View>
               <View className={styles.content}>{selectedFood[key].name}</View>
-              <AtIcon value='close' size='15' onClick={handleDelete(key)} />
+              <AtIcon value='close' size='15' color='#e00f0f' onClick={() => handleDelete(key)} />
             </View>
           })
         }

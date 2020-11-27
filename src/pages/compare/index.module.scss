@@ -1,11 +1,21 @@
+.compare {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .tools {
   display: flex;
-  justify-content: space-between;
   margin: 20px 50px 20px 20px;
+}
 
-  button {
-    margin-right: 10px;
-  }
+.filterContainer {
+  flex: 1;
+}
+
+.filter {
+  width: 138px;
+  margin-right: 10px;
 }
 
 .drawer {
@@ -31,6 +41,8 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
+    padding: 10px;
+    box-sizing: border-box;
   }
 
   .content {

@@ -12,7 +12,7 @@ import {
   getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction,
   setTabDataAction, setCurrentAction, setFoodCodeAction
 } from '../../actions/food'
-import { alert } from '../../utils/util'
+import { alert,getHeight } from '../../utils/util'
 import { typeOptions, initialCheckedList } from './config'
 
 const _ = require("underscore");
@@ -196,32 +196,14 @@ const Food = (props) => {
     }
   }
 
-  const getheaderH = () => {
-    return new Promise(resolve => {
-      const query = Taro.createSelectorQuery()
-      query.select('.food-myTabs').boundingClientRect(rec => {
-        resolve(rec)
-      }).exec();
-    })
-  }
-
-  const getTabH = () => {
-    return new Promise(resolve => {
-      const query = Taro.createSelectorQuery()
-      query.select('.food-myTabs .at-tabs__header').boundingClientRect(rec => {
-        resolve(rec)
-      }).exec();
-    })
-  }
-
   useEffect(() => {
     load()
   }, [isShowMore])
 
   useEffect(async () => {
     setTimeout(async () => {
-      const h1 = await getheaderH();
-      const h2 = await getTabH();
+      const h1 = await getHeight('.food-myTabs');
+      const h2 = await getHeight('.food-myTabs .at-tabs__header');
       setScrollHeight(h1.height - h2.height)
     }, 100)
     Taro.showLoading({

@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { View, ScrollView } from '@tarojs/components'
-import { AtTabs, AtTabsPane, AtList, AtListItem } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtList, AtListItem, AtSearchBar } from 'taro-ui'
 import { useDispatch, useSelector } from 'react-redux'
 import { getFoodAllList } from '../../utils/api'
 import { setFoodAllListAction } from '../../actions/food'
+import styles from './index.module.scss'
+import { getHeight } from '../../utils/util'
 
 const FilterFood = (props) => {
-  const { handleClickadd } = props;
+  const { handleClickadd, checkedList } = props;
   const dispatch = useDispatch()
   const [current, set_current] = useState(0)
   const [page, set_page] = useState(1)
+  const [searchValue, set_searchValue] = useState('')
+  const [scrollHeight, setScrollHeight] = useState(0);
   const classList = useSelector(state => state.food.classList)
   const foodAllList = useSelector(state => state.food.foodAllList)
 
@@ -31,18 +35,35 @@ const FilterFood = (props) => {
     set_page(page + 1)
   }
 
-  useEffect(async () => {
-    if (foodAllList[0].length === 0) {
-      const list = await getFoodAllList()
-      dispatch(setFoodAllListAction(current, list))
-    }
+  const onChangeSearch = (val) => {
+
+  }
+
+  useEffect(() => {
+    (async () => {
+      setTimeout(async () => {
+        const h1 = await getHeight('.filterContainer');
+        const h2 = await getHeight('.search');
+        setScrollHeight(h1.height - h2.height)
+      }, 100)
+
+      if (foodAllList.length > 0 && foodAllList[0].length === 0) {
+        const list = await getFoodAllList()
+        dispatch(setFoodAllListAction(current, list))
+      }
+    })()
   }, [])
 
   return <View className='filterFood'>
+    <AtSearchBar
+      className='search'
+      value={searchValue}
+      onChange={onChangeSearch}
+    />
     <AtTabs
       current={current}
       scroll
-      height='200px'
+      height={`${scrollHeight}px`}
       tabDirection='vertical'
       tabList={classList}
       onClick={handleClick}>
@@ -52,28 +73,20 @@ const FilterFood = (props) => {
             <ScrollView
               scroll-y
               onScrolltolower={onScrolltolower}
-              // className={styles.scrollView}
-              // style={{ height: `${scrollHeight}px` }}
-              style={{ height: `200px` }}
+              style={{ height: `${scrollHeight}px` }}
             >
               <AtList hasBorder={false}>
                 {
                   index === current && foodAllList[current].map((listItem, listIndex) => {
                     if (listIndex <= page * 100) {
-                      return <AtListItem title={listItem.name} onClick={handleClickadd(listItem)} />
+                      return <AtListItem className={checkedList[listItem.code] && styles.listItemActive} title={listItem.name}
+                        onClick={handleClickadd(listItem)} arrow={checkedList[listItem.code] && 'right'} />
                     }
                     return null;
                   })
                 }
               </AtList>
             </ScrollView>
-            {/* <AtList hasBorder={false}>
-              {
-                index === current && foodAllList[current].map((listItem) => {
-                  return <AtListItem title={listItem.name} onClick={handleClickadd(listItem)} />
-                })
-              }
-            </AtList> */}
           </AtTabsPane>
         })
       }

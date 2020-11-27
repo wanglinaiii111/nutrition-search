@@ -56,3 +56,13 @@
 .filterFood .at-list__item .item-content__info-title {
   white-space: inherit;
 }
+
+.filterFood .at-icon-chevron-right::before {
+  content: "\E95E";
+  color: #44b9ed;
+  font-size: 30px;
+}
+
+.filterFood .at-list__item .item-extra__icon {
+  margin-top: -9px;
+}
