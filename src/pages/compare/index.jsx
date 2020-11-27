@@ -14,7 +14,7 @@ const domain = CONFIG.domain
 
 const Compare = (props) => {
   const dispatch = useDispatch()
-  const [showFilter, set_showFilter] = useState(false)
+  const [showFilter, set_showFilter] = useState(true)
   const [showListModal, set_showListModal] = useState(false)
   const [badgeVal, set_badgeVal] = useState(0)
   const [classListMap, set_classListMap] = useState({})
@@ -67,22 +67,22 @@ const Compare = (props) => {
 
   return <View className={styles.compare}>
     <View className={styles.tools}>
-        <View className={styles.filter} onClick={() => set_showFilter(true)}>
-          <AtButton type={showFilter && 'primary'} size='small'>筛选食材</AtButton>
-        </View>
-        <View className={styles.filter}>
-          <AtButton type={!showFilter && 'primary'} size='small' onClick={() => set_showFilter(false)}>生成报表</AtButton>
-        </View>
-        <AtBadge value={badgeVal} maxValue={99}>
-          <AtButton size='small' onClick={() => set_showListModal(true)}>已选食材</AtButton>
-        </AtBadge>
+      <View className={styles.filter} onClick={() => set_showFilter(true)}>
+        <AtButton type={showFilter && 'primary'} size='small'>筛选食材</AtButton>
+      </View>
+      <View className={styles.filter}>
+        <AtButton type={!showFilter && 'primary'} size='small' onClick={() => set_showFilter(false)}>生成报表</AtButton>
+      </View>
+      <AtBadge value={badgeVal} maxValue={99}>
+        <AtButton size='small' onClick={() => set_showListModal(true)}>已选食材</AtButton>
+      </AtBadge>
     </View>
     <View className={`${styles.filterContainer} filterContainer`}>
-    {
-      showFilter && <FilterFood checkedList={selectedFood} handleClickadd={handleClickadd}></FilterFood>
-    }
+      {
+        showFilter && <FilterFood checkedList={selectedFood} handleClickadd={handleClickadd}></FilterFood>
+      }
     </View>
-    
+
     <AtDrawer
       show={showListModal}
       onClose={() => set_showListModal(false)}

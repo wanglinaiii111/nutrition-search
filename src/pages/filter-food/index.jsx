@@ -12,8 +12,9 @@ const FilterFood = (props) => {
   const dispatch = useDispatch()
   const [current, set_current] = useState(0)
   const [page, set_page] = useState(1)
-  const [searchValue, set_searchValue] = useState('')
+  const [searchVal, set_searchVal] = useState('')
   const [scrollHeight, setScrollHeight] = useState(0);
+  const [searchCondition, setsearchCondition] = useState({});
   const classList = useSelector(state => state.food.classList)
   const foodAllList = useSelector(state => state.food.foodAllList)
 
@@ -22,7 +23,7 @@ const FilterFood = (props) => {
     if (index === 0) {
       return set_page(1)
     }
-    if (foodAllList[index].length > 0) {
+    if (foodAllList[index].length > 0 && searchCondition.searchVal === searchVal) {
       return;
     }
     const list = foodAllList[0].filter(item => {
@@ -36,7 +37,29 @@ const FilterFood = (props) => {
   }
 
   const onChangeSearch = (val) => {
+    set_searchVal(val)
+  }
 
+  const onActionClick = () => {
+    getList().then((res) => {
+      if (current === 0) {
+        return
+      }
+      const list = res.filter(item => {
+        return item.classCode === classList[current].code
+      })
+      dispatch(setFoodAllListAction(current, list))
+    })
+  }
+
+  const getList = async () => {
+    return new Promise(async (resolve) => {
+      const param = { searchWord: searchVal }
+      const list = await getFoodAllList(param)
+      dispatch(setFoodAllListAction(0, list))
+      setsearchCondition(param)
+      resolve(list)
+    })
   }
 
   useEffect(() => {
@@ -46,19 +69,16 @@ const FilterFood = (props) => {
         const h2 = await getHeight('.search');
         setScrollHeight(h1.height - h2.height)
       }, 100)
-
-      if (foodAllList.length > 0 && foodAllList[0].length === 0) {
-        const list = await getFoodAllList()
-        dispatch(setFoodAllListAction(current, list))
-      }
+      getList()
     })()
   }, [])
 
   return <View className='filterFood'>
     <AtSearchBar
       className='search'
-      value={searchValue}
+      value={searchVal}
       onChange={onChangeSearch}
+      onActionClick={onActionClick}
     />
     <AtTabs
       current={current}
