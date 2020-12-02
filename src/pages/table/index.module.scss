@@ -1,0 +1,44 @@
+.table {
+  width: 100%;
+  display: flex;
+}
+
+.left {
+  width: 255px;
+  border-right: 1px solid #d6e4ef;
+}
+
+.right {
+  width: calc(100% - 255px);
+}
+
+.scrollContainer {
+  width: 100%;
+
+}
+
+.listItem {
+  display: flex;
+}
+
+.listItem .td {
+  flex-shrink: 0;
+  width: 170px;
+  white-space: normal;
+}
+
+.td {
+  height: 134px;
+  padding: 0px 24px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #d6e4ef;
+  font-size: 32px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.header {
+  background-color: #f1f6f9;
+}

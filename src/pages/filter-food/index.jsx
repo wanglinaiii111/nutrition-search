@@ -14,19 +14,21 @@ const FilterFood = (props) => {
   const [page, set_page] = useState(1)
   const [searchVal, set_searchVal] = useState('')
   const [scrollHeight, setScrollHeight] = useState(0);
-  const [searchCondition, setsearchCondition] = useState({});
+  const [searchCondition, set_searchCondition] = useState({});
   const classList = useSelector(state => state.food.classList)
   const foodAllList = useSelector(state => state.food.foodAllList)
 
   const handleClick = async (index) => {
+    console.log(searchCondition, searchVal);
+    let data = foodAllList[0];
+    if (searchCondition.searchWord !== searchVal) {
+      data = await getList()
+    }
     set_current(index)
     if (index === 0) {
       return set_page(1)
     }
-    if (foodAllList[index].length > 0 && searchCondition.searchVal === searchVal) {
-      return;
-    }
-    const list = foodAllList[0].filter(item => {
+    const list = data.filter(item => {
       return item.classCode === classList[index].code
     })
     dispatch(setFoodAllListAction(index, list))
@@ -57,7 +59,7 @@ const FilterFood = (props) => {
       const param = { searchWord: searchVal }
       const list = await getFoodAllList(param)
       dispatch(setFoodAllListAction(0, list))
-      setsearchCondition(param)
+      set_searchCondition(param)
       resolve(list)
     })
   }

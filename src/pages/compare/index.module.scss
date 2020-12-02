@@ -18,6 +18,10 @@
   margin-right: 10px;
 }
 
+.badgeVal{
+  margin-right: 35px;
+}
+
 .drawer {
   background-color: #FFF;
   position: relative;
@@ -64,4 +68,15 @@
   bottom: 0;
   transform: scaleY(0.5);
   border-bottom: 1PX solid #d6e4ef;
+}
+
+.icons{
+  height: 80px;
+  display: flex;
+  justify-content: flex-end;
+
+  .iconBtn{
+    margin-left: -10rpx;
+    margin-right: 20rpx;
+  }
 }

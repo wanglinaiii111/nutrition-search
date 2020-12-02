@@ -109,9 +109,17 @@ export const getMoreListAction = (data) => {
 }
 
 export const getElementClassAction = (data) => {
-  return {
-    type: GET_ELEMENT_CLASS,
-    data
+  return (dispatch) => {
+    const res = data.map(item => {
+      return {
+        ...item,
+        title: item.name
+      }
+    })
+    dispatch({
+      type: GET_ELEMENT_CLASS,
+      data: res
+    })
   }
 }
 
