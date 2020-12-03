@@ -3,7 +3,7 @@ import { View, ScrollView } from '@tarojs/components'
 import { AtTabs, AtTabsPane, AtList, AtListItem, AtSearchBar } from 'taro-ui'
 import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.module.scss'
-import { getHeight } from '../../utils/util'
+import { getHeight } from '../../../utils/util'
 
 const checkedList = {};
 

@@ -41,7 +41,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View } from '@tarojs/components'
 import styles from './index.module.scss'
 import { useSelector } from 'react-redux';
-import { getFoodInfo } from '../../utils/api'
+import { getFoodInfo } from '../../../utils/api'
 import { EChart } from 'echarts-taro3-react'
 
 const xData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

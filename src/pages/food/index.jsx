@@ -4,7 +4,7 @@ import { AtTabs, AtTabsPane, AtIcon, AtFloatLayout, AtRadio, AtActivityIndicator
 import styles from './index.module.scss'
 import '../../custom.scss'
 import { ListItem } from './listItem/listItem'
-import { PanelTitle } from '../panel-title/index'
+import { PanelTitle } from '../../packageA/pages/panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement } from '../../utils/api'

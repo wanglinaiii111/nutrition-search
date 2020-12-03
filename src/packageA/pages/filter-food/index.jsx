@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { View, ScrollView } from '@tarojs/components'
 import { AtTabs, AtTabsPane, AtList, AtListItem, AtSearchBar } from 'taro-ui'
 import { useDispatch, useSelector } from 'react-redux'
-import { getFoodAllList } from '../../utils/api'
-import { setFoodAllListAction } from '../../actions/food'
+import { getFoodAllList } from '../../../utils/api'
+import { setFoodAllListAction } from '../../../actions/food'
 import styles from './index.module.scss'
-import { getHeight } from '../../utils/util'
+import { getHeight } from '../../../utils/util'
 
 const FilterFood = (props) => {
   const { handleClickadd, checkedList } = props;

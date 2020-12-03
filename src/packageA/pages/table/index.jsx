@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView } from '@tarojs/components'
 import styles from './index.module.scss'
 import { useSelector } from 'react-redux';
-import { getFoodInfo } from '../../utils/api'
+import { getFoodInfo } from '../../../utils/api'
 
 const Table = (props) => {
   const userId = useSelector(state => state.user.userId)
