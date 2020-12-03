@@ -10,7 +10,9 @@ import {
   SET_FOOD_COOD,
   GET_FOOD_ALL_LIST,
   SET_SELECTED_FOOD,
-  DELETE_SELECTED_FOOD
+  DELETE_SELECTED_FOOD,
+  SET_SELECTED_ELEMENT,
+  DELETE_SELECTED_ELEMENT
 } from '../constants'
 
 const INITIAL_STATE = {
@@ -21,9 +23,10 @@ const INITIAL_STATE = {
   foodInfo: {},
   tabData: [],
   current: 0,
-  foodCodes: {},
-  foodAllList: [],
-  selectedFood: {},
+  foodCodes: {}, //存储收藏的元素
+  foodAllList: [], //所有食材列表
+  selectedFood: {}, //存储所有食材中已选中的食材
+  selectedElement: {}, //存储所有元素中已选中的元素
 }
 
 export default function counter(state = INITIAL_STATE, action) {
@@ -148,6 +151,25 @@ export default function counter(state = INITIAL_STATE, action) {
         ...state,
         selectedFood: {
           ...food
+        }
+      }
+      break;
+    case SET_SELECTED_ELEMENT:
+      return {
+        ...state,
+        selectedElement: {
+          ...state.selectedElement,
+          [action.data.code]: action.data
+        }
+      }
+      break;
+    case DELETE_SELECTED_ELEMENT:
+      const ele = state.selectedElement;
+      delete ele[action.code]
+      return {
+        ...state,
+        selectedElement: {
+          ...ele
         }
       }
       break;

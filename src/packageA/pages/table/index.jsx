@@ -6,8 +6,8 @@ import { getFoodInfo } from '../../../utils/api'
 
 const Table = (props) => {
   const userId = useSelector(state => state.user.userId)
-  const elementMap = useSelector(state => state.food.elementMap)
   const selectedFood = useSelector(state => state.food.selectedFood)
+  const selectedElement = useSelector(state => state.food.selectedElement)
   const [tableData, set_tableData] = useState([])
 
   useEffect(() => {
@@ -39,8 +39,8 @@ const Table = (props) => {
       >
         <View className={styles.listItem}>
           {
-            elementMap.map(item => {
-              return <view className={`${styles.td} ${styles.header}`}>{item.name}</view>
+            Object.keys(selectedElement).map(item => {
+              return <view className={`${styles.td} ${styles.header}`}>{selectedElement[item].name}</view>
             })
           }
         </View>
@@ -48,8 +48,8 @@ const Table = (props) => {
           tableData.map(item => {
             return <View className={styles.listItem}>
               {
-                elementMap.map(ele => {
-                  return <view className={styles.td}>{item[ele['code']]}</view>
+                Object.keys(selectedElement).map(ele => {
+                  return <view className={styles.td}>{item[ele]}</view>
                 })
               }
             </View>

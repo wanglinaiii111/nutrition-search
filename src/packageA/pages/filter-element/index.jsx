@@ -5,11 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './index.module.scss'
 import { getHeight } from '../../../utils/util'
 
-const checkedList = {};
-
 const FilterElement = (props) => {
-  const { handleClickadd } = props;
-  const dispatch = useDispatch()
+  const { handleClickaddEle, checkedList } = props;
   const [current, set_current] = useState(0)
   const [scrollHeight, setScrollHeight] = useState(0);
   const elementMap = useSelector(state => state.food.elementMap)
@@ -48,7 +45,7 @@ const FilterElement = (props) => {
                   index === current && elementMap.map((listItem, listIndex) => {
                     if (listItem.class === item.code) {
                       return <AtListItem className={checkedList[listItem.code] && styles.listItemActive} title={listItem.name}
-                        onClick={handleClickadd(listItem)} arrow={checkedList[listItem.code] && 'right'} />
+                        onClick={handleClickaddEle(listItem)} arrow={checkedList[listItem.code] && 'right'} />
                     }
                     return null;
                   })

@@ -7,7 +7,7 @@ import FilterElement from '../filter-element/index'
 import styles from './index.module.scss'
 import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
-import { setSelectedFoodAction, deleteSelectedFoodAction } from '../../../actions/food'
+import { setSelectedFoodAction, deleteSelectedFoodAction, setSelectedEleAction, deleteSelectedEleAction } from '../../../actions/food'
 import { alert } from '../../../utils/util'
 import { CONFIG } from '../../../utils/config'
 import { Table } from '../table/index'
@@ -15,6 +15,23 @@ import { BarChart } from '../barChart/index'
 
 const domain = CONFIG.domain
 const _ = require('underscore')
+const ele = {
+  Water: {
+    class: "C1",
+    code: "Water",
+    name: "水分",
+  },
+  Energy: {
+    class: "C1",
+    code: "Energy",
+    name: "能量",
+  },
+  Protein: {
+    class: "C1",
+    code: "Protein",
+    name: "蛋白质",
+  }
+}
 
 const Compare = (props) => {
   const dispatch = useDispatch()
@@ -26,6 +43,7 @@ const Compare = (props) => {
   const [elementVal, set_elementVal] = useState(0)
   const [classListMap, set_classListMap] = useState({})
   const selectedFood = useSelector(state => state.food.selectedFood)
+  const selectedElement = useSelector(state => state.food.selectedElement)
   const classList = useSelector(state => state.food.classList)
 
   const handleClickadd = (item) => {
@@ -44,6 +62,22 @@ const Compare = (props) => {
     alert('删除成功')
   }
 
+  const handleClickaddEle = (item) => {
+    return () => {
+      if (selectedElement[item.code]) {
+        handleDeleteEle(item.code)
+        return;
+      }
+      dispatch(setSelectedEleAction(item))
+      alert('添加成功')
+    }
+  }
+
+  const handleDeleteEle = (code) => {
+    dispatch(deleteSelectedEleAction(code))
+    alert('删除成功')
+  }
+
   useEffect(() => {
     const selected = Taro.getStorageSync('selectedFood')
     if (selected) {
@@ -53,6 +87,16 @@ const Compare = (props) => {
         })
       })
     }
+
+    let selectedEle = Taro.getStorageSync('selectedElement')
+    if (!selectedEle) {
+      selectedEle = ele;
+    }
+    batch(() => {
+      Object.keys(selectedEle).map(key => {
+        dispatch(setSelectedEleAction(selectedEle[key]))
+      })
+    })
   }, [])
 
   useEffect(() => {
@@ -63,6 +107,15 @@ const Compare = (props) => {
       data: selectedFood
     })
   }, [selectedFood])
+
+  useEffect(() => {
+    const eleLen = Object.keys(selectedElement).length || 0;
+    set_elementVal(eleLen)
+    Taro.setStorage({
+      key: "selectedElement",
+      data: selectedElement
+    })
+  }, [selectedElement])
 
   useEffect(() => {
     let obj = {}
@@ -94,7 +147,7 @@ const Compare = (props) => {
       {
         _.find([
           showFilter === 1 && <FilterFood checkedList={selectedFood} handleClickadd={handleClickadd}></FilterFood>,
-          showFilter === 2 && <FilterElement checkedList={selectedFood} handleClickadd={handleClickadd}></FilterElement>,
+          showFilter === 2 && <FilterElement checkedList={selectedElement} handleClickaddEle={handleClickaddEle}></FilterElement>,
           showFilter === 3 &&
           <>
             <View className={styles.icons}>
@@ -102,24 +155,31 @@ const Compare = (props) => {
               <AtIcon onClick={() => set_showTable(false)} className={styles.iconBtn} prefixClass='iconfont' value='tubiao-zhuzhuangtu' size='22' color={!showTable ? '#44b9ed' : '#333'}></AtIcon>
             </View>
             {
-              showTable ? <Table></Table> : <BarChart></BarChart>
+              showTable ? <Table></Table> : !showElementModal && !showListModal ? <BarChart></BarChart> : null
             }
           </>
         ], Boolean)
-        // showFilter
-        //   ? <FilterFood checkedList={selectedFood} handleClickadd={handleClickadd}></FilterFood>
-        //   : <>
-        //     <View className={styles.icons}>
-        //       <AtIcon onClick={() => set_showTable(true)} className={styles.iconBtn} prefixClass='iconfont' value='liebiao' size='22' color={showTable ? '#44b9ed' : '#333'}></AtIcon>
-        //       <AtIcon onClick={() => set_showTable(false)} className={styles.iconBtn} prefixClass='iconfont' value='tubiao-zhuzhuangtu' size='22' color={!showTable ? '#44b9ed' : '#333'}></AtIcon>
-        //     </View>
-        //     {
-        //       showTable ? <Table></Table> : <BarChart></BarChart>
-        //     }
-        //   </>
       }
     </View>
 
+    <AtDrawer
+      show={showElementModal}
+      onClose={() => set_showElementModal(false)}
+      mask
+      right
+    >
+      <View className={styles.drawer}>
+        <PanelTitle>元素列表</PanelTitle>
+        {
+          Object.keys(selectedElement).map(key => {
+            return <View className={styles.drawerItem}>
+              <View className={styles.content}>{selectedElement[key].name}</View>
+              <AtIcon value='close' size='15' color='#e00f0f' onClick={() => handleDeleteEle(key)} />
+            </View>
+          })
+        }
+      </View>
+    </AtDrawer>
     <AtDrawer
       show={showListModal}
       onClose={() => set_showListModal(false)}
@@ -127,7 +187,7 @@ const Compare = (props) => {
       right
     >
       <View className={styles.drawer}>
-        <PanelTitle>对比列表</PanelTitle>
+        <PanelTitle>食材列表</PanelTitle>
         {
           Object.keys(selectedFood).map(key => {
             return <View className={styles.drawerItem}>
