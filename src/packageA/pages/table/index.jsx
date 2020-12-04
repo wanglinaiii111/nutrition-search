@@ -28,7 +28,9 @@ const Table = (props) => {
       <View className={`${styles.td} ${styles.header}`}>食材</View>
       {
         Object.keys(selectedFood).map((key, index) => {
-          return <View className={`${styles.td} ${styles.header}`}>{selectedFood[key]['name']}</View>
+          return <View className={`${styles.td} ${styles.header}`}>
+            <View className={styles.tdText}>{selectedFood[key]['name']}</View>
+          </View>
         })
       }
     </View>

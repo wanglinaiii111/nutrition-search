@@ -4,12 +4,12 @@
 }
 
 .left {
-  width: 255px;
+  width: 190px;
   border-right: 1px solid #d6e4ef;
 }
 
 .right {
-  width: calc(100% - 255px);
+  width: calc(100% - 190px);
 }
 
 .scrollContainer {
@@ -23,16 +23,16 @@
 
 .listItem .td {
   flex-shrink: 0;
-  width: 170px;
+  width: 140px;
   white-space: normal;
 }
 
 .td {
   height: 134px;
-  padding: 0px 24px;
+  padding: 15px 16px;
   box-sizing: border-box;
   border-bottom: 1px solid #d6e4ef;
-  font-size: 32px;
+  font-size: 28px;
   line-height: 1.5;
   display: flex;
   align-items: center;
@@ -40,5 +40,13 @@
 }
 
 .header {
-  background-color: #f1f6f9;
+  // background-color: #f1f6f9;
+}
+
+.tdText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
