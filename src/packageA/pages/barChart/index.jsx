@@ -48,13 +48,19 @@ const BarChart = (props) => {
         type: 'value',
         boundaryGap: [0, 0.01],
         axisLabel: {
-          show: false
+          show: true,
+          textStyle: {
+            color: '#333'
+        }
         },
         axisTick: {
           show: false
         },
         axisLine: {
-          show: false
+          show: true,
+          lineStyle: {
+            color: '#cccccc6e'
+          }
         },
         splitLine: {
           lineStyle: {

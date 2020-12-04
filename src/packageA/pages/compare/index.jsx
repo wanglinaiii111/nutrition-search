@@ -38,7 +38,7 @@ const Compare = (props) => {
   const [showFilter, set_showFilter] = useState(3)
   const [showListModal, set_showListModal] = useState(false)
   const [showElementModal, set_showElementModal] = useState(false)
-  const [showTable, set_showTable] = useState(true)
+  // const [showTable, set_showTable] = useState(true)
   const [badgeVal, set_badgeVal] = useState(0)
   const [elementVal, set_elementVal] = useState(0)
   const [classListMap, set_classListMap] = useState({})
@@ -150,13 +150,17 @@ const Compare = (props) => {
           showFilter === 2 && <FilterElement checkedList={selectedElement} handleClickaddEle={handleClickaddEle}></FilterElement>,
           showFilter === 3 &&
           <>
-            <View className={styles.icons}>
+            {/* <View className={styles.icons}>
               <AtIcon onClick={() => set_showTable(true)} className={styles.iconBtn} prefixClass='iconfont' value='liebiao' size='22' color={showTable ? '#44b9ed' : '#333'}></AtIcon>
               <AtIcon onClick={() => set_showTable(false)} className={styles.iconBtn} prefixClass='iconfont' value='tubiao-zhuzhuangtu' size='22' color={!showTable ? '#44b9ed' : '#333'}></AtIcon>
-            </View>
-            {
+            </View> */}
+            {/* {
               showTable ? <Table></Table> : !showElementModal && !showListModal ? <BarChart></BarChart> : null
-            }
+            } */}
+            <PanelTitle>营养元素含量对比表</PanelTitle>
+            <Table></Table>
+            <PanelTitle>营养元素含量对比条形图</PanelTitle>
+            <BarChart></BarChart>
           </>
         ], Boolean)
       }
