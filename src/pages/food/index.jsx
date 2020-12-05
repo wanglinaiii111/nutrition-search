@@ -31,6 +31,7 @@ const Food = (props) => {
   const [scrollHeight, setScrollHeight] = useState(0);
   const [sortCode, set_sortCode] = useState('code');
   const [sortDirection, set_sortDirection] = useState(1);
+  const [scrollTop, set_scrollTop] = useState(0);
 
   const classList = useSelector(state => state.food.classList)
   const foodList = useSelector(state => state.food.foodList)
@@ -47,28 +48,21 @@ const Food = (props) => {
       checkedList[key]['status'] && ele.push(key)
     })
     set_saveCheckedList(checkedList)
-    let lastValue = ''
-    if (tabData[current].condition !== null && len > 0) {
-      if (isShowMore) {
-        lastValue = tabData[current]['data'][len - 1].code
-      } else {
-        lastValue = tabData[current]['condition'].lastValue
-      }
-    }
     const param = {
       sortCol: sortCode,
       direction: sortDirection,
-      lastValue: lastValue,
+      count: len,
       classCode: code,
       searchWord: searchVal,
       elements: ele,
       userId: userId
     }
-    const isEqual = _.isEqual(param, tabData[current].condition);
+    console.log(param, tabData[current].condition)
+    const isEqual = _.isEqual(param, { ...tabData[current].condition, count: len });
     let list = []
 
     batch(async () => {
-      if (isEqual) {
+      if (isEqual && !isShowMore) {
         list = tabData[current].data;
       } else {
         list = await getFoodList(param);
@@ -87,6 +81,7 @@ const Food = (props) => {
       if (isShowMore) {
         dispatch(getMoreListAction(list));
       } else {
+        set_scrollTop(Math.random())
         dispatch(getListAction(list));
       }
 
@@ -141,7 +136,26 @@ const Food = (props) => {
     if (len === 0) {
       alert('至少选择1个标签~')
     }
-    getListData(current);
+    const code = classList[current].code;
+    const ele = [];
+    Object.keys(checkedList).map(key => {
+      checkedList[key]['status'] && ele.push(key)
+    })
+    const param = {
+      sortCol: sortCode,
+      direction: sortDirection,
+      count: tabData[current].condition.count,
+      classCode: code,
+      searchWord: searchVal,
+      elements: ele,
+      userId: userId
+    }
+    const isEqual = _.isEqual(param, tabData[current].condition);
+    console.log(param, tabData[current].condition, isEqual);
+
+    if (!isEqual) {
+      dispatch(setTabDataAction(current, { ...tabData[current], condition: null, data: [] }))
+    }
     setIsOpened(false);
   }
 
@@ -276,6 +290,7 @@ const Food = (props) => {
             return <AtTabsPane current={current} index={index}>
               <ScrollView
                 scroll-y
+                scrollTop={scrollTop}
                 onScrolltolower={onScrolltolower}
                 className={styles.scrollView}
                 style={{ height: `${scrollHeight}px` }}
