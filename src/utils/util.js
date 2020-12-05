@@ -7,3 +7,12 @@ export const alert = (msg) => {
     duration: 3000
   })
 }
+
+export const getHeight = (e) => {
+  return new Promise(resolve => {
+    const query = Taro.createSelectorQuery()
+    query.select(e).boundingClientRect(rec => {
+      resolve(rec)
+    }).exec();
+  })
+}

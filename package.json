@@ -41,6 +41,7 @@
     "@tarojs/react": "3.0.14",
     "@tarojs/runtime": "3.0.14",
     "@tarojs/taro": "3.0.14",
+    "echarts-taro3-react": "^1.0.8",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
     "react-redux": "^7.2.0",

@@ -13,7 +13,9 @@ import {
   SET_FOOD_COOD,
   GET_FOOD_ALL_LIST,
   SET_SELECTED_FOOD,
-  DELETE_SELECTED_FOOD
+  DELETE_SELECTED_FOOD,
+  SET_SELECTED_ELEMENT,
+  DELETE_SELECTED_ELEMENT
 } from '../constants'
 
 export const setCurrentAction = (current) => {
@@ -41,6 +43,20 @@ export const setSelectedFoodAction = (data) => {
 export const deleteSelectedFoodAction = (code) => {
   return {
     type: DELETE_SELECTED_FOOD,
+    code
+  }
+}
+
+export const setSelectedEleAction = (data) => {
+  return {
+    type: SET_SELECTED_ELEMENT,
+    data
+  }
+}
+
+export const deleteSelectedEleAction = (code) => {
+  return {
+    type: DELETE_SELECTED_ELEMENT,
     code
   }
 }
@@ -109,9 +125,17 @@ export const getMoreListAction = (data) => {
 }
 
 export const getElementClassAction = (data) => {
-  return {
-    type: GET_ELEMENT_CLASS,
-    data
+  return (dispatch) => {
+    const res = data.map(item => {
+      return {
+        ...item,
+        title: item.name
+      }
+    })
+    dispatch({
+      type: GET_ELEMENT_CLASS,
+      data: res
+    })
   }
 }
 

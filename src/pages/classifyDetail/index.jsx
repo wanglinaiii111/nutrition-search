@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, CoverImage } from '@tarojs/components'
+import { View, CoverImage, Image } from '@tarojs/components'
 import styles from './index.module.scss'
 import '../../custom.scss'
 import { AtCard, AtList, AtListItem, AtAccordion, AtIcon } from 'taro-ui'
 import { getFoodInfo, setCollectFood, setUnCollectFood } from '../../utils/api'
 import { getFoodInfoAction, setEleClassStatusAction, setFoodCodeAction } from '../../actions/food'
 import { useDispatch, useSelector } from 'react-redux';
+import { CONFIG } from '../../utils/config'
+
+const domain = CONFIG.domain
 
 const Detail = (props) => {
   const dispatch = useDispatch()
@@ -68,7 +71,7 @@ const Detail = (props) => {
       <View className={styles.headerContainer}>
         <View className={styles.header} style={{ backgroundColor: `${parentClass.color}80` }}>
           {
-            foodInfo.classCode && <CoverImage className={styles.logo} src={`../../image/class/${foodInfo.classCode}.png`} />
+            foodInfo.classCode && <CoverImage className={styles.logo} src={`${domain}/images/class/${foodInfo.classCode}.png`} />
           }
           <View className={styles.name}>{foodInfo.name}</View>
         </View>

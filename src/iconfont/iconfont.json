@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1790021",
+      "name": "图表-柱状图",
+      "font_class": "tubiao-zhuzhuangtu",
+      "unicode": "e6db",
+      "unicode_decimal": 59099
+    },
+    {
+      "icon_id": "8288858",
+      "name": "列表",
+      "font_class": "liebiao",
+      "unicode": "e850",
+      "unicode_decimal": 59472
+    },
+    {
       "icon_id": "908497",
       "name": "收藏",
       "font_class": "shoucang",

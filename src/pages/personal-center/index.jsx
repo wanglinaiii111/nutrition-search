@@ -12,7 +12,7 @@ const Center = (props) => {
     return () => {
       if (type === 'compare') {
         Taro.navigateTo({
-          url: '../compare/index'
+          url: '../../packageA/pages/compare/index'
         })
         return;
       }
