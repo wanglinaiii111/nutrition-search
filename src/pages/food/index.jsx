@@ -57,7 +57,6 @@ const Food = (props) => {
       elements: ele,
       userId: userId
     }
-    console.log(param, tabData[current].condition)
     const isEqual = _.isEqual(param, { ...tabData[current].condition, count: len });
     let list = []
 
@@ -151,7 +150,6 @@ const Food = (props) => {
       userId: userId
     }
     const isEqual = _.isEqual(param, tabData[current].condition);
-    console.log(param, tabData[current].condition, isEqual);
 
     if (!isEqual) {
       dispatch(setTabDataAction(current, { ...tabData[current], condition: null, data: [] }))
@@ -186,7 +184,6 @@ const Food = (props) => {
   }
 
   const onActionClick = () => {
-    console.log(searchVal)
     dispatch(setTabDataAction(current, { ...tabData[current], condition: null, data: [] }))
   }
 
