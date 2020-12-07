@@ -48,7 +48,7 @@ const ListItem = React.memo((props) => {
 
   return <View className={styles.container}>
     <View className={styles.content}>
-      <View className={styles.collect} onClick={clickCollect} style={{borderTopColor:`${classList[current].color}38`}}>
+      <View className={styles.collect} onClick={clickCollect} style={{ borderTopColor: `${classList[current].color}38` }}>
         <AtIcon className={styles.collectIcon} prefixClass='iconfont' value='shoucang' size='22' color={foodCodes[data.code] ? classList[current].color : '#615f5f'}
         ></AtIcon>
       </View>
@@ -70,16 +70,20 @@ const ListItem = React.memo((props) => {
               <View
                 className={styles.listItem}
               >
-                <View className={styles.elementName}>{
+                {
                   elementMap.map(e => {
                     if (e.code === item) {
-                      return e.name
+                      return <>
+                        <View className={styles.elementName}>{
+                          e.name
+                        }</View>
+                        <View className={styles.zhi}>
+                          {data.eles[item]}{data.eles[item] && e.unit}
+                        </View>
+                      </>
                     }
                   })
-                }</View>
-                <View className={styles.zhi}>
-                  {data.eles[item]}
-                </View>
+                }
               </View>
 
             </>

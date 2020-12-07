@@ -140,7 +140,6 @@ const BarChart = (props) => {
       })
     })
     const h = Object.keys(selectedElement).length * Object.keys(selectedFood).length * 23
-    console.log(h, 'height');
 
     set_height(h)
 

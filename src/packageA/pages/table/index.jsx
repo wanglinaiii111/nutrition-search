@@ -8,6 +8,7 @@ const Table = (props) => {
   const userId = useSelector(state => state.user.userId)
   const selectedFood = useSelector(state => state.food.selectedFood)
   const selectedElement = useSelector(state => state.food.selectedElement)
+  const elementMap = useSelector(state => state.food.elementMap)
   const [tableData, set_tableData] = useState([])
 
   useEffect(() => {
@@ -51,7 +52,16 @@ const Table = (props) => {
             return <View className={styles.listItem}>
               {
                 Object.keys(selectedElement).map(ele => {
-                  return <view className={styles.td}>{item[ele]}</view>
+                  return <view className={styles.td}>
+                    {item[ele]}
+                    {
+                      item[ele] && elementMap.map(e => {
+                        if (e.code === ele) {
+                          return e.unit
+                        }
+                      })
+                    }
+                  </view>
                 })
               }
             </View>

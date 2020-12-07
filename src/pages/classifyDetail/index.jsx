@@ -93,7 +93,7 @@ const Detail = (props) => {
             <AtList hasBorder={false}>
               {
                 elementMap.map(ele => {
-                  return classItem.code === ele.class && <AtListItem title={ele.name} extraText={foodInfo[ele.code]} />
+                  return classItem.code === ele.class && <AtListItem title={ele.name} extraText={`${foodInfo[ele.code]}${foodInfo[ele.code] && ele.unit}`} />
                 })
               }
             </AtList>
