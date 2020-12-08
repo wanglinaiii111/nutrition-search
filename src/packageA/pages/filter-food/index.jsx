@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { View, ScrollView } from '@tarojs/components'
-import { AtTabs, AtTabsPane, AtList, AtListItem, AtSearchBar } from 'taro-ui'
+import { View, ScrollView, CoverImage, Text } from '@tarojs/components'
+import { AtTabs, AtTabsPane, AtList, AtListItem, AtSearchBar, AtDrawer, AtIcon, AtFab } from 'taro-ui'
 import { useDispatch, useSelector } from 'react-redux'
 import { getFoodAllList } from '../../../utils/api'
 import { setFoodAllListAction } from '../../../actions/food'
 import styles from './index.module.scss'
 import { getHeight } from '../../../utils/util'
+import { CONFIG } from '../../../utils/config'
+import { PanelTitle } from '../panel-title/index'
+
+const domain = CONFIG.domain
 
 const FilterFood = (props) => {
-  const { handleClickadd, checkedList } = props;
+  const { handleClickadd, selectedFood, handleDelete } = props;
   const dispatch = useDispatch()
   const [current, set_current] = useState(0)
   const [page, set_page] = useState(1)
   const [searchVal, set_searchVal] = useState('')
   const [scrollHeight, setScrollHeight] = useState(0);
+  const [showListModal, set_showListModal] = useState(false)
   const [searchCondition, set_searchCondition] = useState({});
   const classList = useSelector(state => state.food.classList)
   const foodAllList = useSelector(state => state.food.foodAllList)
+  const [classListMap, set_classListMap] = useState({})
 
   const handleClick = async (index) => {
     console.log(searchCondition, searchVal);
@@ -75,7 +81,18 @@ const FilterFood = (props) => {
     })()
   }, [])
 
+  useEffect(() => {
+    let obj = {}
+    classList.map(item => {
+      obj[item.code] = item
+    })
+    set_classListMap(obj)
+  }, [classList])
+
   return <View className='filterFood'>
+    <AtFab className={styles.fabBtn} onClick={() => set_showListModal(true)}>
+      <Text>已选</Text>
+    </AtFab>
     <AtSearchBar
       className='search'
       value={searchVal}
@@ -101,8 +118,8 @@ const FilterFood = (props) => {
                 {
                   index === current && foodAllList[current].map((listItem, listIndex) => {
                     if (listIndex <= page * 100) {
-                      return <AtListItem className={checkedList[listItem.code] && styles.listItemActive} title={listItem.name}
-                        onClick={handleClickadd(listItem)} arrow={checkedList[listItem.code] && 'right'} />
+                      return <AtListItem className={selectedFood[listItem.code] && styles.listItemActive} title={listItem.name}
+                        onClick={handleClickadd(listItem)} arrow={selectedFood[listItem.code] && 'right'} />
                     }
                     return null;
                   })
@@ -113,6 +130,30 @@ const FilterFood = (props) => {
         })
       }
     </AtTabs>
+    <AtDrawer
+      show={showListModal}
+      onClose={() => set_showListModal(false)}
+      mask
+      right
+    >
+      <View className={styles.drawer}>
+        <PanelTitle>食材列表</PanelTitle>
+        {
+          Object.keys(selectedFood).map(key => {
+            return <View className={styles.drawerItem}>
+              <View className={styles.thumb} style={{
+                backgroundColor: `${classListMap[selectedFood[key]['classCode']] &&
+                  classListMap[selectedFood[key]['classCode']]['color']}`
+              }}>
+                <CoverImage src={`${domain}/images/class/${selectedFood[key]['classCode']}.png`} />
+              </View>
+              <View className={styles.content}>{selectedFood[key].name}</View>
+              <AtIcon value='close' size='15' color='#e00f0f' onClick={() => handleDelete(key)} />
+            </View>
+          })
+        }
+      </View>
+    </AtDrawer>
   </View>
 }
 
