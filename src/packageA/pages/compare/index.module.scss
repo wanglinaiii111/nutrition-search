@@ -6,7 +6,8 @@
 
 .tools {
   display: flex;
-  margin: 20px 50px 20px 20px;
+  justify-content: space-between;
+  margin: 20px 20px 20px 20px;
 }
 
 .filterContainer {
@@ -14,6 +15,15 @@
 }
 
 .filter {
-  width: 138px;
-  margin-right: 10px;
+  width: 24%;
+}
+
+.save {
+  width: 24%;
+  float: right;
+  margin-top: -8px;
+}
+
+.table{
+  padding: 0 20px;
 }

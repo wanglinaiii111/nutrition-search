@@ -99,6 +99,9 @@ const Compare = (props) => {
       <View className={styles.filter}>
         <AtButton type={showFilter === 3 && 'primary'} size='small' onClick={() => set_showFilter(3)}>生成报表</AtButton>
       </View>
+      <View className={styles.filter}>
+        <AtButton type={showFilter === 4 && 'primary'} size='small' onClick={() => set_showFilter(4)}>查看报告</AtButton>
+      </View>
     </View>
     <View className={`${styles.filterContainer} filterContainer`}>
       {
@@ -106,12 +109,18 @@ const Compare = (props) => {
           showFilter === 1 && <FilterFood selectedFood={selectedFood} handleClickadd={handleClickadd} handleDelete={handleDelete}></FilterFood>,
           showFilter === 2 && <FilterElement selectedElement={selectedElement} handleClickaddEle={handleClickaddEle} handleDeleteEle={handleDeleteEle}></FilterElement>,
           showFilter === 3 &&
-          <>
+          <View className={styles.table}>
+            <View className={styles.save}>
+              <AtButton size='small'>保存报告</AtButton>
+            </View>
+            <View>
+
+            </View>
             <PanelTitle>营养元素含量对比表</PanelTitle>
             <Table></Table>
             <PanelTitle>营养元素含量对比条形图</PanelTitle>
             <BarChart></BarChart>
-          </>
+          </View>
         ], Boolean)
       }
     </View>

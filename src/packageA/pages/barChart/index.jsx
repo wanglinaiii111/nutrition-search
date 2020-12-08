@@ -38,8 +38,8 @@ const BarChart = (props) => {
         },
       },
       grid: {
-        left: '3%',
-        right: '10%',
+        left: '2%',
+        right: '7%',
         bottom: 40,
         top: 0,
         containLabel: true
