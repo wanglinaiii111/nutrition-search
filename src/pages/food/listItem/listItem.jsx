@@ -48,7 +48,7 @@ const ListItem = React.memo((props) => {
 
   return <View className={styles.container}>
     <View className={styles.content}>
-      <View className={styles.collect} onClick={clickCollect} style={{ borderTopColor: `${classList[current].color}38` }}>
+      <View className={styles.collect} onClick={clickCollect} style={{ borderTopColor: `${foodCodes[data.code] ? classList[current].color + '38' : '#7b7b7b2e'}` }}>
         <AtIcon className={styles.collectIcon} prefixClass='iconfont' value='shoucang' size='22' color={foodCodes[data.code] ? classList[current].color : '#615f5f'}
         ></AtIcon>
       </View>

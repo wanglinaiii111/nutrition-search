@@ -7,7 +7,8 @@ export default {
   "subpackages": [{
     "root": "packageA",
     "pages": [
-      "pages/compare/index"
+      "pages/compare/index",
+      "pages/history/index"
     ]
   }],
   window: {

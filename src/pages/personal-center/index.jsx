@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtList, AtListItem } from "taro-ui"
 import compare from '../../image/center/compare.png'
+import history from '../../image/center/history.png'
 
 import styles from './index.module.scss'
 
@@ -13,6 +14,12 @@ const Center = (props) => {
       if (type === 'compare') {
         Taro.navigateTo({
           url: '../../packageA/pages/compare/index'
+        })
+        return;
+      }
+      if (type === 'history') {
+        Taro.navigateTo({
+          url: '../../packageA/pages/history/index'
         })
         return;
       }
@@ -31,6 +38,7 @@ const Center = (props) => {
       </View>
       <AtList hasBorder={false} className={`${styles.container} personCenter-container`}>
         <AtListItem title='对比工具' arrow='right' thumb={compare} onClick={clickToDetail('compare')} />
+        <AtListItem title='历史对比' arrow='right' thumb={history} onClick={clickToDetail('history')} />
       </AtList>
     </View>
   )

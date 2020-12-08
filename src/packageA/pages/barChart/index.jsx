@@ -51,7 +51,7 @@ const BarChart = (props) => {
           show: true,
           textStyle: {
             color: '#333'
-        }
+          }
         },
         axisTick: {
           show: false
@@ -125,7 +125,7 @@ const BarChart = (props) => {
       legendName.push(ele.name)
       let ydata = [];
       tableData.map(item => {
-        ydata.push(parseInt(item[ele.code]) === 'NAN' ? 0 : parseInt(item[ele.code]))
+        ydata.push(item[ele.code])
       })
       series.push({
         name: ele.name,
