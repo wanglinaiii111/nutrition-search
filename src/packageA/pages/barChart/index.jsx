@@ -130,6 +130,7 @@ const BarChart = (props) => {
       series.push({
         name: ele.name,
         type: 'bar',
+        barWidth: 12,
         label: {
           show: true,
           position: 'right',
@@ -139,10 +140,9 @@ const BarChart = (props) => {
         data: ydata
       })
     })
-    const h = Object.keys(selectedElement).length * Object.keys(selectedFood).length * 23
+    const h = Object.keys(selectedElement).length * Object.keys(selectedFood).length * 23 + 70
 
     set_height(h)
-
     init(xdata, series, legendName, selected)
   }, [tableData, selectedElement])
 
