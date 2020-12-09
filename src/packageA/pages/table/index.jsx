@@ -1,32 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, ScrollView } from '@tarojs/components'
 import styles from './index.module.scss'
 import { useSelector } from 'react-redux';
-import { getFoodInfo } from '../../../utils/api'
 
 const Table = (props) => {
-  const userId = useSelector(state => state.user.userId)
   const selectedFood = useSelector(state => state.food.selectedFood)
   const selectedElement = useSelector(state => state.food.selectedElement)
   const elementMap = useSelector(state => state.food.elementMap)
-  const [tableData, set_tableData] = useState([])
+  const tableData = useSelector(state => state.food.tableData)
 
   const setWidth = () => {
     return Object.keys(selectedElement).length < 4 ? 100 / Object.keys(selectedElement).length + '%' : '140rpx'
   }
-
-  useEffect(() => {
-    let arr = [];
-    Object.keys(selectedFood).map(key => {
-      arr.push(getFoodInfo({
-        code: key,
-        userId: userId,
-      }))
-    })
-    Promise.all(arr).then(res => {
-      set_tableData(res)
-    })
-  }, [selectedFood])
 
   return <View className={styles.table}>
     <View className={styles.left}>

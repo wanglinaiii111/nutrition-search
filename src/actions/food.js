@@ -15,7 +15,8 @@ import {
   SET_SELECTED_FOOD,
   DELETE_SELECTED_FOOD,
   SET_SELECTED_ELEMENT,
-  DELETE_SELECTED_ELEMENT
+  DELETE_SELECTED_ELEMENT,
+  SET_TABLE_DATA
 } from '../constants'
 
 export const setCurrentAction = (current) => {
@@ -157,6 +158,13 @@ export const getElementAction = (data) => {
 export const getFoodInfoAction = (data) => {
   return {
     type: GET_FOOD_INFO,
+    data
+  }
+}
+
+export const setTableData = (data) => {
+  return {
+    type: SET_TABLE_DATA,
     data
   }
 }

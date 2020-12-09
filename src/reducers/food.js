@@ -12,7 +12,8 @@ import {
   SET_SELECTED_FOOD,
   DELETE_SELECTED_FOOD,
   SET_SELECTED_ELEMENT,
-  DELETE_SELECTED_ELEMENT
+  DELETE_SELECTED_ELEMENT,
+  SET_TABLE_DATA
 } from '../constants'
 
 const INITIAL_STATE = {
@@ -27,6 +28,7 @@ const INITIAL_STATE = {
   foodAllList: [], //所有食材列表
   selectedFood: {}, //存储所有食材中已选中的食材
   selectedElement: {}, //存储所有元素中已选中的元素
+  tableData: [],
 }
 
 export default function counter(state = INITIAL_STATE, action) {
@@ -171,6 +173,12 @@ export default function counter(state = INITIAL_STATE, action) {
         selectedElement: {
           ...ele
         }
+      }
+      break;
+    case SET_TABLE_DATA:
+      return {
+        ...state,
+        tableData: action.data
       }
       break;
     default:

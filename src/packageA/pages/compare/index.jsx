@@ -7,19 +7,22 @@ import FilterElement from '../filter-element/index'
 import styles from './index.module.scss'
 import { PanelTitle } from '../panel-title/index'
 import { batch, useDispatch, useSelector } from 'react-redux'
-import { setSelectedFoodAction, deleteSelectedFoodAction, setSelectedEleAction, deleteSelectedEleAction } from '../../../actions/food'
+import { setSelectedFoodAction, deleteSelectedFoodAction, setSelectedEleAction, deleteSelectedEleAction, setTableData } from '../../../actions/food'
 import { alert } from '../../../utils/util'
 import { Table } from '../table/index'
 import { BarChart } from '../barChart/index'
+import { PieChart } from '../pieChart/index'
 import { ele } from './config'
+import { getFoodInfo } from '../../../utils/api'
 
 const _ = require('underscore')
 
 const Compare = (props) => {
   const dispatch = useDispatch()
-  const [showFilter, set_showFilter] = useState(1)
+  const [showFilter, set_showFilter] = useState(3)
   const selectedFood = useSelector(state => state.food.selectedFood)
   const selectedElement = useSelector(state => state.food.selectedElement)
+  const userId = useSelector(state => state.user.userId)
 
   const handleClickadd = (item) => {
     return () => {
@@ -79,6 +82,16 @@ const Compare = (props) => {
       key: "selectedFood",
       data: selectedFood
     })
+    let arr = [];
+    Object.keys(selectedFood).map(key => {
+      arr.push(getFoodInfo({
+        code: key,
+        userId: userId,
+      }))
+    })
+    Promise.all(arr).then(res => {
+      dispatch(setTableData(res))
+    })
   }, [selectedFood])
 
   useEffect(() => {
@@ -113,13 +126,16 @@ const Compare = (props) => {
             <View className={styles.save}>
               <AtButton size='small'>保存报告</AtButton>
             </View>
-            <View>
-
-            </View>
             <PanelTitle>营养元素含量对比表</PanelTitle>
             <Table></Table>
             <PanelTitle>营养元素含量对比条形图</PanelTitle>
             <BarChart></BarChart>
+            <PanelTitle>营养元素含量分布图</PanelTitle>
+            {
+              Object.keys(selectedElement).map((item, index) => {
+                return <PieChart ele={selectedElement[item]} canvasId={'pie-chart' + index}></PieChart>
+              })
+            }
           </View>
         ], Boolean)
       }
