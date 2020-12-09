@@ -11,6 +11,10 @@ const Table = (props) => {
   const elementMap = useSelector(state => state.food.elementMap)
   const [tableData, set_tableData] = useState([])
 
+  const setWidth = () => {
+    return Object.keys(selectedElement).length < 4 ? 100 / Object.keys(selectedElement).length + '%' : '140rpx'
+  }
+
   useEffect(() => {
     let arr = [];
     Object.keys(selectedFood).map(key => {
@@ -43,7 +47,7 @@ const Table = (props) => {
         <View className={styles.listItem}>
           {
             Object.keys(selectedElement).map(item => {
-              return <view className={`${styles.td} ${styles.header}`}>{selectedElement[item].name}</view>
+              return <view className={`${styles.td} ${styles.header}`} style={{ width: `${setWidth()}` }}>{selectedElement[item].name}</view>
             })
           }
         </View>
@@ -52,7 +56,7 @@ const Table = (props) => {
             return <View className={styles.listItem}>
               {
                 Object.keys(selectedElement).map(ele => {
-                  return <view className={styles.td}>
+                  return <view className={styles.td} style={{ width: `${setWidth()}` }}>
                     {item[ele]}
                     {
                       item[ele] && elementMap.map(e => {
