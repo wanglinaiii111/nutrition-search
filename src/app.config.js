@@ -8,6 +8,7 @@ export default {
     "root": "packageA",
     "pages": [
       "pages/compare/index",
+      "pages/history/index",
     ]
   }],
   window: {

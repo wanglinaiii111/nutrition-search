@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '历史对比',
+  navigationBarTitleText: '对比记录',
 }

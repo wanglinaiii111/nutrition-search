@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtButton } from 'taro-ui'
+import { AtButton, AtIcon } from 'taro-ui'
 import FilterFood from '../filter-food/index'
 import FilterElement from '../filter-element/index'
 import styles from './index.module.scss'
@@ -13,7 +13,7 @@ import { Table } from '../table/index'
 import { BarChart } from '../barChart/index'
 import { PieChart } from '../pieChart/index'
 import { ele } from './config'
-import { getFoodInfo } from '../../../utils/api'
+import { getFoodInfo, saveCompareRecode } from '../../../utils/api'
 
 const _ = require('underscore')
 
@@ -23,6 +23,7 @@ const Compare = (props) => {
   const selectedFood = useSelector(state => state.food.selectedFood)
   const selectedElement = useSelector(state => state.food.selectedElement)
   const userId = useSelector(state => state.user.userId)
+  const [showHistory, set_showHistory] = useState(false)
 
   const handleClickadd = (item) => {
     return () => {
@@ -54,6 +55,25 @@ const Compare = (props) => {
   const handleDeleteEle = (code) => {
     dispatch(deleteSelectedEleAction(code))
     alert('删除成功')
+  }
+
+  const saveCompare = () => {
+    if (Object.keys(selectedFood).length === 0) {
+      alert('您还没有添加食材哦~')
+      return;
+    }
+    const param = {
+      food: Object.keys(selectedFood),
+      element: Object.keys(selectedElement),
+      userId
+    }
+    saveCompareRecode(param)
+  }
+
+  const navTo = ()=>{
+    Taro.navigateTo({
+      url:'../history/index'
+    })
   }
 
   useEffect(() => {
@@ -110,10 +130,7 @@ const Compare = (props) => {
         <AtButton type={showFilter === 2 && 'primary'} size='small'>元素</AtButton>
       </View>
       <View className={styles.filter}>
-        <AtButton type={showFilter === 3 && 'primary'} size='small' onClick={() => set_showFilter(3)}>生成报表</AtButton>
-      </View>
-      <View className={styles.filter}>
-        <AtButton type={showFilter === 4 && 'primary'} size='small' onClick={() => set_showFilter(4)}>查看报告</AtButton>
+        <AtButton type={showFilter === 3 && 'primary'} size='small' onClick={() => set_showFilter(3)}>报告</AtButton>
       </View>
     </View>
     <View className={`${styles.filterContainer} filterContainer`}>
@@ -124,17 +141,25 @@ const Compare = (props) => {
           showFilter === 3 &&
           <View className={styles.table}>
             <View className={styles.save}>
-              <AtButton size='small'>保存报告</AtButton>
+              <AtIcon onClick={saveCompare} prefixClass='iconfont' value='-baocun' size='26' color='#615f5f'></AtIcon>
+              <AtIcon onClick={navTo} prefixClass='iconfont' value='jilu' size='24' color={showFilter === 4 ? '#44b9ed' : '#615f5f'}></AtIcon>
             </View>
-            <PanelTitle>营养元素含量对比表</PanelTitle>
-            <Table></Table>
-            <PanelTitle>营养元素含量对比条形图</PanelTitle>
-            <BarChart></BarChart>
-            <PanelTitle>营养元素含量分布图</PanelTitle>
             {
-              Object.keys(selectedElement).map((item, index) => {
-                return <PieChart ele={selectedElement[item]} canvasId={'pie-chart' + index}></PieChart>
-              })
+              !showHistory
+                ? <>
+                  <PanelTitle>营养元素含量对比表</PanelTitle>
+                  <Table></Table>
+                  <PanelTitle>营养元素含量对比条形图</PanelTitle>
+                  <BarChart></BarChart>
+                  <PanelTitle>营养元素含量分布图</PanelTitle>
+                  {
+                    Object.keys(selectedElement).map((item, index) => {
+                      return <PieChart ele={selectedElement[item]} canvasId={'pie-chart' + index}></PieChart>
+                    })
+                  }
+                </>
+                : <>
+                </>
             }
           </View>
         ], Boolean)

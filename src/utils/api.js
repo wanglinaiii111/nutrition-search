@@ -177,3 +177,41 @@ export const getFoodAllList = (data) => {
     })
   })
 }
+
+//#### 保存对比报告
+export const saveCompareRecode = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/tool/saveCompare',
+      method: 'POST',
+      data,
+      success: function (res) {
+        resolve()
+      },
+      fail: function (e) {
+        console.log(e)
+        alert(e.errMsg)
+        reject(e)
+      }
+    })
+  })
+}
+
+//#### 获取对比记录
+export const getCompareRecode = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/tool/getCompare',
+      method: 'GET',
+      data,
+      success: function (res) {
+        resolve(res.data.data)
+      },
+      fail: function (e) {
+        console.log(e)
+        alert(e.errMsg)
+        reject(e)
+      }
+    })
+  })
+}
