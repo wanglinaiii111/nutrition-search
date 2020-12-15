@@ -215,3 +215,22 @@ export const getCompareRecode = (data) => {
     })
   })
 }
+
+//#### 删除对比报告
+export const deleteCompareRecode = (data) => {
+  return new Promise((resolve, reject) => {
+    Taro.request({
+      url: domain + '/tool/deleteCompare',
+      method: 'GET',
+      data,
+      success: function (res) {
+        resolve()
+      },
+      fail: function (e) {
+        console.log(e)
+        alert(e.errMsg)
+        reject(e)
+      }
+    })
+  })
+}

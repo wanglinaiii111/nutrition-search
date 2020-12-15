@@ -1,9 +1,7 @@
 import {
-  batch
-} from 'react-redux';
-import {
   HISTOTY_LIST,
-  LIST_OPEN
+  LIST_OPEN,
+  DETELE_LIST_ITEM
 } from '../constants'
 
 export const setHistoryListAction = (data) => {
@@ -23,5 +21,12 @@ export const setListOpenAction = (index) => {
   return {
     type: LIST_OPEN,
     index
+  }
+}
+
+export const deleteListItemAction = (_id) => {
+  return {
+    type: DETELE_LIST_ITEM,
+    _id
   }
 }

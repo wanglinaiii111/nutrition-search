@@ -128,7 +128,8 @@ const BarChart = (props) => {
 
     set_height(h)
     init(xdata, series, legendName)
-  }, [tableData, selectedElement])
+    console.log(tableData, selectedElement,selectedFood,"******");
+  }, [tableData, selectedElement,selectedFood])
 
   return <View className={styles.barChart} style={{ height: `${height}px` }}>
     <EChart ref={refBarChart} canvasId='bar-chart' />

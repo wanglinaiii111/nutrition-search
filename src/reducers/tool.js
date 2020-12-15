@@ -1,6 +1,7 @@
 import {
   HISTOTY_LIST,
-  LIST_OPEN
+  LIST_OPEN,
+  DETELE_LIST_ITEM
 } from '../constants'
 
 const INITIAL_STATE = {
@@ -26,6 +27,14 @@ export default function counter(state = INITIAL_STATE, action) {
             }
           }
           return item
+        })
+      }
+      break;
+    case DETELE_LIST_ITEM:
+      return {
+        ...state,
+        historyList: state.historyList.filter(item => {
+          return item._id !== action._id
         })
       }
       break;

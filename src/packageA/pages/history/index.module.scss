@@ -1,0 +1,92 @@
+.container {
+  padding: 0 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.container .tag {
+  margin: 0 10px 10px 0;
+}
+
+.close {
+  // position: absolute;
+  // right: 32px;
+  // top: 5px;
+  // z-index: 100;
+  margin-right: 20px;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+
+.header {
+  position: relative;
+  padding: 24px 24px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 32px;
+  color: #333;
+  font-size: 32px;
+  box-sizing: border-box;
+  position: relative;
+  transition: background-color 0.3s;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  transform-origin: center;
+  box-sizing: border-box;
+  pointer-events: none;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  border: 0 solid #d6e4ef;
+  transform: scale(0.5);
+  border-bottom-width: 1PX;
+}
+
+.info {
+  flex: 1;
+  text-align: left;
+  line-height: 1.6;
+}
+
+.info_title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  width: 590px;
+}
+
+.info_note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #999;
+  font-size: 28px;
+  line-height: 1.5;
+}
+
+.arrow {
+  color: #CCC;
+  font-size: 48px;
+  line-height: 1;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  transition: -webkit-transform 0.2s ease;
+  -o-transition: transform 0.2s ease;
+  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, -webkit-transform 0.2s ease;
+  -webkit-transform-origin: center;
+  -ms-transform-origin: center;
+  transform-origin: center;
+}
