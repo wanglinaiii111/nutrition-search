@@ -12,7 +12,7 @@ import {
   getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction,
   setTabDataAction, setCurrentAction, setFoodCodeAction
 } from '../../actions/food'
-import { alert,getHeight } from '../../utils/util'
+import { alert, getHeight } from '../../utils/util'
 import { typeOptions, initialCheckedList } from './config'
 
 const _ = require("underscore");
@@ -55,7 +55,8 @@ const Food = (props) => {
       classCode: code,
       searchWord: searchVal,
       elements: ele,
-      userId: userId
+      userId: userId,
+      collect: radioVal === 'all' ? 0 : 1
     }
     const isEqual = _.isEqual(param, { ...tabData[current].condition, count: len });
     let list = []
@@ -133,7 +134,8 @@ const Food = (props) => {
   const clickConfirm = () => {
     const len = getTagsLength();
     if (len === 0) {
-      alert('至少选择1个标签~')
+      alert('至少选择1个元素标签~')
+      return;
     }
     const code = classList[current].code;
     const ele = [];
