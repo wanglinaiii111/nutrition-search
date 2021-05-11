@@ -28,9 +28,11 @@
       "disablePlugins": [],
       "outputPath": ""
     },
+    "bundle": false,
     "useIsolateContext": true,
     "useCompilerModule": true,
     "userConfirmedUseCompilerModuleSwitch": false,
+    "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true
@@ -73,6 +75,18 @@
         {
           "name": "pages/compare/index",
           "pathName": "pages/compare/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "packageA/pages/compare/index",
+          "pathName": "packageA/pages/compare/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "packageA/pages/history/index",
+          "pathName": "packageA/pages/history/index",
           "scene": null
         }
       ]

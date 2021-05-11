@@ -89,11 +89,11 @@ const Compare = (props) => {
       }
       is = true;
     })
-    if (is === true) {
-      return alert('该报告已存在~')
-    }
     if(isName === true){
       return alert('该报告名称已存在，请重新输入~')
+    }
+    if (is === true) {
+      return alert('该报告已存在~')
     }
     saveCompareRecode(param).then(() => {
       alert('保存成功~')
