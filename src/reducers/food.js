@@ -6,6 +6,7 @@ import {
   GET_FOOD_INFO,
   SET_ELEMENT_CLASS_STATUS,
   SET_TAB_DATA,
+  SET_TAB_DATA_NULL,
   SET_CURRENT,
   SET_FOOD_COOD,
   GET_FOOD_ALL_LIST,
@@ -72,6 +73,17 @@ export default function counter(state = INITIAL_STATE, action) {
             data: item.data
           }
         }),
+      }
+      break;
+    case SET_TAB_DATA_NULL:
+      return {
+        ...state,
+        tabData: state.classList.map((item, index) => {
+          return {
+            condition: null,
+            data: []
+          }
+        })
       }
       break;
     case GET_FOOD_ALL_LIST:

@@ -10,7 +10,7 @@ import Taro from '@tarojs/taro'
 import { getFoodClass, getFoodList, getElementClass, getElement } from '../../utils/api'
 import {
   getClassAction, getListAction, getElementClassAction, getElementAction, getMoreListAction,
-  setTabDataAction, setCurrentAction, setFoodCodeAction
+  setTabDataAction,setTabDataNullAction, setCurrentAction, setFoodCodeAction
 } from '../../actions/food'
 import { alert, getHeight } from '../../utils/util'
 import { typeOptions, initialCheckedList } from './config'
@@ -23,6 +23,7 @@ const Food = (props) => {
   const [checkedList, setCheckedList] = useState(initialCheckedList);
   const [saveCheckedList, set_saveCheckedList] = useState({});
   const [radioVal, setRadioVal] = useState('all');
+  const [lastRadioVal, setLastRadioVal] = useState('all');
   const [upDragStyle] = useState({ height: 50 + 'px' });
   const [isShowMore, setIsShowMore] = useState(false);
   const [searchVal, set_searchVal] = useState('');
@@ -151,11 +152,20 @@ const Food = (props) => {
       elements: ele,
       userId: userId
     }
-    const isEqual = _.isEqual(param, tabData[current].condition);
+    if(radioVal !== lastRadioVal){
+      setLastRadioVal(radioVal)
+      dispatch(setTabDataNullAction())
+      // setTimeout(()=>{
+      //   getListData(current);
+      // },100)
+    }else{
+      const isEqual = _.isEqual(param, tabData[current].condition);
 
-    if (!isEqual) {
-      dispatch(setTabDataAction(current, { ...tabData[current], condition: null, data: [] }))
+      if (!isEqual) {
+        dispatch(setTabDataAction(current, { ...tabData[current], condition: null, data: [] }))
+      }
     }
+    
     setIsOpened(false);
   }
 

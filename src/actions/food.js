@@ -9,6 +9,7 @@ import {
   GET_FOOD_INFO,
   SET_ELEMENT_CLASS_STATUS,
   SET_TAB_DATA,
+  SET_TAB_DATA_NULL,
   SET_CURRENT,
   SET_FOOD_COOD,
   GET_FOOD_ALL_LIST,
@@ -106,6 +107,12 @@ export const setTabDataAction = (index, data) => {
     type: SET_TAB_DATA,
     index,
     data
+  }
+}
+
+export const setTabDataNullAction = () => {
+  return {
+    type: SET_TAB_DATA_NULL
   }
 }
 
